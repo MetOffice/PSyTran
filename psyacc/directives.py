@@ -47,7 +47,7 @@ def apply_loop_directive(loop, options={}):
     """
     Apply a ``loop`` directive.
 
-    :arg loop: the :class:`Loop` node.
+    :arg loop: the :class:`psyclone.psyir.nodes.loop.Loop` node.
     :kwarg options: a dictionary of clause options.
     """
     if not isinstance(loop, nodes.Loop):

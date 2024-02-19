@@ -23,7 +23,7 @@ __all__ = [
 
 def _check_loop(loop):
     """
-    Check that we do indeed have a :class:`Loop` node.
+    Check that we do indeed have a :class:`psyclone.psyir.nodes.loop.Loop` node.
     """
     if not isinstance(loop, nodes.Loop):
         raise TypeError(f"Expected a Loop, not '{type(loop)}'.")
@@ -41,7 +41,7 @@ def loop2nest(loop):
     """
     Given a loop, obtain all of its descendent loops (inclusive).
 
-    :arg loop: the :class:`Loop`
+    :arg loop: the :class:`psyclone.psyir.nodes.loop.Loop`
     """
     _check_loop(loop)
     return get_descendents(loop, node_type=nodes.Loop, inclusive=True)
@@ -64,13 +64,14 @@ def is_perfectly_nested(outer_loop_or_subnest):
     Determine whether a loop (sub)nest is perfect, i.e., each level except the deepest
     contains only the next loop.
 
-    Note that we ignore nodes of type :class:`Literal` and :class:`Reference`.
+    Note that we ignore nodes of type :class:`psyclone.psyir.nodes.literal.Literal` and
+    :class:`psyclone.psyir.nodes.reference.Reference`.
 
     Note also that the 'outer loop' here is not necessarily the outer-most loop in the
     schedule, just the outer-most loop in the sub-nest.
 
     :arg outer_loop_or_subnest: either the outer loop of the subnest, or the subnest as
-        a list of :class:`Loop`\s
+        a list of :class:`psyclone.psyir.nodes.loop.Loop`\s
     """
     exclude = (
         nodes.literal.Literal,
@@ -90,7 +91,8 @@ def is_perfectly_nested(outer_loop_or_subnest):
     def intersect(list1, list2):
         r"""
         Return the intersection of two lists. Note that we cannot use the in-built set
-        intersection functionality because PSyclone :class:`Node`\s are not hashable.
+        intersection functionality because PSyclone
+        :class:`psyclone.psyir.nodes.node.Node`\s are not hashable.
         """
         return [item for item in list1 if item in list2]
 
@@ -136,7 +138,7 @@ def is_simple_loop(loop):
 
 def get_loop_variable_name(loop):
     """
-    Given a :class:`Loop` node, return its variable name.
+    Given a :class:`psyclone.psyir.nodes.loop.Loop` node, return its variable name.
     """
     assert isinstance(loop, nodes.Loop)
     return loop.variable.name
@@ -144,8 +146,8 @@ def get_loop_variable_name(loop):
 
 def get_loop_nest_variable_names(loop):
     """
-    Given a :class:`Loop` node, return the variable names of each loop it
-    contains.
+    Given a :class:`psyclone.psyir.nodes.loop.Loop` node, return the variable names of
+    each loop it contains.
     """
     assert isinstance(loop, nodes.Loop)
     return [get_loop_variable_name(loop) for loop in loop2nest(loop)]
@@ -153,7 +155,8 @@ def get_loop_nest_variable_names(loop):
 
 def is_independent(loop):
     """
-    Determine whether a perfectly nested :class:`Loop` is independent.
+    Determine whether a perfectly nested :class:`psyclone.psyir.nodes.loop.Loop` is
+    independent.
     """
     if not is_perfectly_nested(loop):
         raise ValueError(
@@ -175,8 +178,9 @@ def is_independent(loop):
 
 def is_parallelisable(loop):
     """
-    Determine whether a :class:`Loop` can be parallelised.
+    Determine whether a :class:`psyclone.psyir.nodes.loop.Loop` can be parallelised.
 
-    Note: wraps the :meth:`can_loop_be_parallelised` method of :class:`DependencyTools`.
+    Note: wraps the :meth:`can_loop_be_parallelised` method of
+    :class:`psyclone.psyir.tools.dependency_tools.DependencyTools`.
     """
     return DependencyTools().can_loop_be_parallelised(loop)

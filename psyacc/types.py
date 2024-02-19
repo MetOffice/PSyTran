@@ -11,7 +11,8 @@ __all__ = ["is_character", "refers_to_character"]
 
 def is_character(node):
     """
-    Determine whether a :class:`Reference` is of type `CHARACTER`.
+    Determine whether a :class:`psyclone.psyir.nodes.reference.Reference` has Fortran
+    type `CHARACTER`.
     """
     assert isinstance(node, nodes.Reference)
     return "CHARACTER" in node.datatype.type_text
@@ -19,6 +20,7 @@ def is_character(node):
 
 def refers_to_character(node):
     r"""
-    Determine whether a Node contains references to `CHARACTER`\s.
+    Determine whether a :class:`psyclone.psyir.nodes.node.Node` contains references to
+    Fortran `CHARACTER`\s.
     """
     return any([is_character(ref) for ref in get_descendents(node, nodes.Reference)])

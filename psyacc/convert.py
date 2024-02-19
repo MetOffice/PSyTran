@@ -17,7 +17,8 @@ def convert_array_notation(schedule):
     """
     Convert implicit array range assignments into explicit ones.
 
-    Wrapper for the :meth:`apply` method of :class:`Reference2ArrayRangeTrans`.
+    Wrapper for the :meth:`apply` method of
+    :class:`psyclone.psyir.transformations.reference2arrayrange_trans.Reference2ArrayRangeTrans`.
     """
     for reference in schedule.walk(nodes.Reference, stop_type=nodes.Reference):
         if has_ancestor(reference, nodes.Call):
@@ -33,7 +34,8 @@ def convert_range_loops(schedule):
     """
     Convert explicit array range assignments into loops.
 
-    Wrapper for the :meth:`apply` method of :class:`NemoArrayRange2LoopTrans`.
+    Wrapper for the :meth:`apply` method of
+    :class:`psyclone.domain.nemo.transformations.nemo_arrayrange2loop_trans.NemoArrayRange2LoopTrans`.
     """
     before = str(schedule)
     for r in schedule.walk(nodes.Range):

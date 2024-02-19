@@ -27,7 +27,7 @@ def _prepare_loop_for_clause(loop):
     """
     Prepare to apply a clause to a ``loop`` directive.
 
-    :arg loop: the :class:`Loop` node.
+    :arg loop: the :class:`psyclone.psyir.nodes.loop.Loop` node.
     """
     _check_loop(loop)
     if not has_kernels_directive(loop):
@@ -40,7 +40,7 @@ def has_seq_clause(loop):
     """
     Determine whether a loop has a ``seq`` clause.
 
-    :arg loop: the :class:`Loop` node.
+    :arg loop: the :class:`psyclone.psyir.nodes.loop.Loop` node.
     """
     return has_loop_directive(loop) and loop.parent.parent.sequential
 
@@ -51,7 +51,7 @@ def apply_loop_seq(loop):
 
     A ``loop`` directive is also applied, if it does not already exist.
 
-    :arg loop: the :class:`Loop` node.
+    :arg loop: the :class:`psyclone.psyir.nodes.loop.Loop` node.
     """
     _prepare_loop_for_clause(loop)
     if has_gang_clause(loop):
@@ -65,7 +65,7 @@ def has_gang_clause(loop):
     """
     Determine whether a loop has a ``gang`` clause.
 
-    :arg loop: the :class:`Loop` node.
+    :arg loop: the :class:`psyclone.psyir.nodes.loop.Loop` node.
     """
     return has_loop_directive(loop) and loop.parent.parent.gang
 
@@ -76,7 +76,7 @@ def apply_loop_gang(loop):
 
     A ``loop`` directive is also applied, if it does not already exist.
 
-    :arg loop: the :class:`Loop` node.
+    :arg loop: the :class:`psyclone.psyir.nodes.loop.Loop` node.
     """
     _prepare_loop_for_clause(loop)
     if has_seq_clause(loop):
@@ -88,7 +88,7 @@ def has_vector_clause(loop):
     """
     Determine whether a loop has a ``vector`` clause.
 
-    :arg loop: the :class:`Loop` node.
+    :arg loop: the :class:`psyclone.psyir.nodes.loop.Loop` node.
     """
     return has_loop_directive(loop) and loop.parent.parent.vector
 
@@ -99,7 +99,7 @@ def apply_loop_vector(loop):
 
     A ``loop`` directive is also applied, if it does not already exist.
 
-    :arg loop: the :class:`Loop` node.
+    :arg loop: the :class:`psyclone.psyir.nodes.loop.Loop` node.
     """
     _prepare_loop_for_clause(loop)
     if has_seq_clause(loop):
@@ -111,7 +111,7 @@ def has_collapse_clause(loop):
     """
     Determine whether a loop lies within a collapsed loop nest.
 
-    :arg loop: the :class:`Loop` node.
+    :arg loop: the :class:`psyclone.psyir.nodes.loop.Loop` node.
     """
     _check_loop(loop)
     if not has_kernels_directive(loop):
@@ -134,7 +134,7 @@ def apply_loop_collapse(loop, collapse=None):
 
     A ``loop`` directive is also applied, if it does not already exist.
 
-    :arg loop: the :class:`Loop` node.
+    :arg loop: the :class:`psyclone.psyir.nodes.loop.Loop` node.
     :kwarg collapse: the number of loops to collapse
     """
     _prepare_loop_for_clause(loop)

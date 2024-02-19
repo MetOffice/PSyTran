@@ -146,7 +146,8 @@ def has_ancestor(node, node_type=nodes.Loop, name=None, inclusive=False):
 
 def are_siblings(*nodes):
     r"""
-    Determine whether a collection of :class:`Node`\s have the same parent.
+    Determine whether a collection of :class:`psyclone.psyir.nodes.node.Node`\s have the
+    same parent.
     """
     assert len(nodes) > 1
     return all([node in nodes[0].siblings for node in nodes])
@@ -154,7 +155,8 @@ def are_siblings(*nodes):
 
 def is_next_sibling(node1, node2):
     """
-    Determine whether one :class:`Node` immediately follows another.
+    Determine whether one :class:`psyclone.psyir.nodes.node.Node` immediately follows
+    another.
 
     :arg node1: the first node.
     :arg node2: the second node.
