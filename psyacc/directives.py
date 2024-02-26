@@ -70,7 +70,9 @@ def apply_loop_directive(loop, options={}):
     if not isinstance(options, dict):
         raise TypeError(f"Expected a dict, not '{type(options)}'.")
     if not has_kernels_directive(loop):
-        raise ValueError("Cannot apply a loop directive without a kernels directive.")
+        raise ValueError(
+            "Cannot apply a loop directive without a kernels directive."
+        )
     ACCLoopTrans().apply(loop, options=options)
 
 

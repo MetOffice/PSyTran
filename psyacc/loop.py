@@ -82,16 +82,16 @@ def nest2loop(loops):
 
 def is_perfectly_nested(outer_loop_or_subnest):
     r"""
-    Determine whether a Loop (sub)nest is perfect, i.e., each level except the deepest
-    contains only the next Loop.
+    Determine whether a Loop (sub)nest is perfect, i.e., each level except the
+    deepest contains only the next Loop.
 
     Note that we ignore nodes of type :class:`Literal` and :class:`Reference`.
 
-    Note also that the 'outer loop' here is not necessarily the outer-most loop in the
-    schedule, just the outer-most loop in the sub-nest.
+    Note also that the 'outer loop' here is not necessarily the outer-most loop
+    in the schedule, just the outer-most loop in the sub-nest.
 
-    :arg outer_loop_or_subnest: either the outer loop of the subnest, or the subnest as
-        a list of Loops
+    :arg outer_loop_or_subnest: either the outer loop of the subnest, or the
+        subnest as a list of Loops
     :type outer_loop_or_subnest: :py:class:`list` or :py:class:`Loop`
 
     :returns: ``True`` if the Loop nest is perfect, else ``False``.
@@ -114,8 +114,9 @@ def is_perfectly_nested(outer_loop_or_subnest):
 
     def intersect(list1, list2):
         r"""
-        Return the intersection of two lists. Note that we cannot use the in-built set
-        intersection functionality because PSyclone :class:`Node`\s are not hashable.
+        Return the intersection of two lists. Note that we cannot use the
+        in-built set intersection functionality because PSyclone
+        :class:`Node`\s are not hashable.
 
         :arg list1: the first list
         :type list1: :py:class:`list`
@@ -131,14 +132,16 @@ def is_perfectly_nested(outer_loop_or_subnest):
     loops, non_loops = [outer_loop], []
     while len(loops) > 0:
         non_loops = get_children(loops[0], exclude=exclude)
-        loops = intersect(get_children(loops[0], node_type=nodes.Loop), subnest)
+        loops = intersect(
+            get_children(loops[0], node_type=nodes.Loop), subnest
+        )
 
         # Case of one loop and no non-loops: this nest level is okay
         if len(loops) == 1 and not non_loops:
             continue
 
-        # Case of no loops and no non-loops with descendents outside of the subnest:
-        # this nest level is also okay
+        # Case of no loops and no non-loops with descendents outside of the
+        # subnest: this nest level is also okay
         if not loops:
             for node in non_loops:
                 if intersect(node.walk(nodes.Loop), subnest):
@@ -233,7 +236,8 @@ def is_parallelisable(loop):
     """
     Determine whether a Loop can be parallelised.
 
-    Note: wraps the :meth:`can_loop_be_parallelised` method of :class:`DependencyTools`.
+    Note: wraps the :meth:`can_loop_be_parallelised` method of
+    :class:`DependencyTools`.
 
     :arg loop: the Loop to query.
     :type loop: :py:class:`Loop`

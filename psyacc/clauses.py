@@ -34,7 +34,9 @@ def _prepare_loop_for_clause(loop):
     """
     _check_loop(loop)
     if not has_kernels_directive(loop):
-        raise ValueError("Cannot apply a loop clause without a kernels directive.")
+        raise ValueError(
+            "Cannot apply a loop clause without a kernels directive."
+        )
     if not has_loop_directive(loop):
         apply_loop_directive(loop)
 
@@ -182,9 +184,12 @@ def apply_loop_collapse(loop, collapse=None):
     if not isinstance(collapse, int):
         raise TypeError(f"Expected an integer, not '{type(collapse)}'.")
     if collapse <= 1:
-        raise ValueError(f"Expected an integer greater than one, not {collapse}.")
+        raise ValueError(
+            f"Expected an integer greater than one, not {collapse}."
+        )
     if len(loops) < collapse:
         raise ValueError(
-            f"Cannot apply collapse to {collapse} loops in a sub-nest of {len(loops)}."
+            f"Cannot apply collapse to {collapse} loops in a sub-nest of"
+            f" {len(loops)}."
         )
     loop.parent.parent._collapse = collapse

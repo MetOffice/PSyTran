@@ -30,7 +30,10 @@ def refers_to_character(node):
     :arg node: the Node to check.
     :type node: :py:class:`Node`
 
-    :returns: ``True`` if there are References to ``CHARACTER``\s, else ``False``.
+    :returns: ``True`` if there are References to ``CHARACTER``\s, else
+        ``False``.
     :rtype: :py:class:`bool`
     """
-    return any([is_character(ref) for ref in get_descendents(node, nodes.Reference)])
+    return any(
+        [is_character(ref) for ref in get_descendents(node, nodes.Reference)]
+    )
