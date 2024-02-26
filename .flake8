@@ -14,5 +14,5 @@ ignore =
     F405,
     # Line break occurred before binary operator
     W503
-max-line-length = 88
+max-line-length = 79
 select = B,C,E,F,W,T4,B9
