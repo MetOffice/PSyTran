@@ -29,6 +29,15 @@ docs: demos
 	@cd docs && make html
 	@echo "Done."
 
+format:
+	@echo "Applying formatting..."
+	@black *.py
+	@black demos/*.py
+	@black docs/source/*.py
+	@black psyacc/*.py
+	@black test/*.py
+	@echo "Done."
+
 lint:
 	@echo "Checking lint..."
 	@flake8
