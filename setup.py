@@ -12,7 +12,10 @@ if sys.version_info[0] != 3:
 setup(
     name="psyacc",
     version="0.1",
-    description="PSyACC: Tools for automating OpenACC GPU porting efforts using PSyclone",
+    description=(
+        "PSyACC: Tools for automating OpenACC GPU porting efforts using"
+        " PSyclone"
+    ),
     author="Joe Wallwork",
     author_email="joseph.wallwork@metoffice.gov.uk",
     packages=["psyacc"],
