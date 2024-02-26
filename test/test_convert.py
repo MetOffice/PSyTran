@@ -28,8 +28,8 @@ implied_array_assignment = {
 
 def test_convert_array_notation(parser, dim):
     """
-    Test that :func:`convert_array_notation` successfully converts an implied array
-    range assignment into an explicit one.
+    Test that :func:`convert_array_notation` successfully converts an implied
+    array range assignment into an explicit one.
     """
     schedule = get_schedule(parser, implied_array_assignment[dim])
     assert len(schedule.walk(nodes.Assignment)) == 1
@@ -42,8 +42,8 @@ def test_convert_array_notation(parser, dim):
 
 def test_avoid_array_notation_subroutine(parser):
     """
-    Test that :func:`convert_array_notation` does not use array notation in subroutine
-    calls.
+    Test that :func:`convert_array_notation` does not use array notation in
+    subroutine calls.
     """
     schedule = get_schedule(parser, cs.subroutine_call)
     assert len(schedule.walk(nodes.Call)) == 1
@@ -56,8 +56,8 @@ def test_avoid_array_notation_subroutine(parser):
 def test_convert_range_loops(parser, dim):
     """
     Test that :func:`convert_range_loops` successfully converts an array range
-    assignment into a loop. If dim > 1 then the loop should itself contain an array
-    range assignment.
+    assignment into a loop. If dim > 1 then the loop should itself contain an
+    array range assignment.
     """
     schedule = get_schedule(parser, array_assignment[dim])
     assert len(schedule.walk(nodes.Assignment)) == 1

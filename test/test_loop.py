@@ -14,7 +14,7 @@ def nest_depth(request):
     return request.param
 
 
-@pytest.fixture(params=["1_assignment", "3_assignments", "if"])
+@pytest.fixture(params=["1_assign", "3_assigns", "if"])
 def perfection(request):
     return request.param
 
@@ -25,11 +25,11 @@ def imperfection(request):
 
 
 perfectly_nested_loop = {
-    "1_assignment": cs.loop_with_1_assignment,
-    "1_assignment_intrinsic_call": cs.loop_with_1_assignment_and_intrinsic_call,
-    "3_assignments": cs.loop_with_3_assignments,
-    "double_3_assignments": cs.double_loop_with_3_assignments,
-    "double_conditional_3_assignments": cs.double_loop_with_conditional_3_assignments,
+    "1_assign": cs.loop_with_1_assignment,
+    "1_assign_intrinsic_call": cs.loop_with_1_assignment_and_intrinsic_call,
+    "3_assigns": cs.loop_with_3_assignments,
+    "double_3_assigns": cs.double_loop_with_3_assignments,
+    "double_cond_3_assigns": cs.double_loop_with_conditional_3_assignments,
     "if": cs.triple_loop_with_conditional_1_assignment,
 }
 
@@ -96,7 +96,9 @@ def test_is_not_perfectly_nested_double(parser, imperfection):
     Test that :func:`is_perfectly_nested` correctly identifies an imperfectly
     nested double loop.
     """
-    schedule = get_schedule(parser, imperfectly_nested_double_loop[imperfection])
+    schedule = get_schedule(
+        parser, imperfectly_nested_double_loop[imperfection]
+    )
     loops = schedule.walk(nodes.Loop)
     assert not is_perfectly_nested(loops[0])
     assert not is_simple_loop(loops[0])
@@ -108,7 +110,9 @@ def test_is_not_perfectly_nested_triple(parser, imperfection):
     Test that :func:`is_perfectly_nested` correctly identifies an imperfectly
     nested triple loop.
     """
-    schedule = get_schedule(parser, imperfectly_nested_triple_loop[imperfection])
+    schedule = get_schedule(
+        parser, imperfectly_nested_triple_loop[imperfection]
+    )
     loops = schedule.walk(nodes.Loop)
     assert not is_perfectly_nested(loops[0])
     assert not is_simple_loop(loops[0])
@@ -132,7 +136,9 @@ def test_is_perfectly_nested_subnest(parser, imperfection):
     Test that :func:`is_perfectly_nested` correctly identifies a perfectly
     nested sub-nest.
     """
-    schedule = get_schedule(parser, imperfectly_nested_triple_loop[imperfection])
+    schedule = get_schedule(
+        parser, imperfectly_nested_triple_loop[imperfection]
+    )
     loops = schedule.walk(nodes.Loop)
     assert not is_perfectly_nested(loops[0])
     assert is_perfectly_nested(loops[1])
@@ -144,7 +150,9 @@ def test_is_perfectly_nested_subnest_conditional(parser, imperfection):
     Test that :func:`is_perfectly_nested` correctly identifies a perfectly
     nested sub-nest with conditional.
     """
-    schedule = get_schedule(parser, conditional_perfectly_nested_subloop[imperfection])
+    schedule = get_schedule(
+        parser, conditional_perfectly_nested_subloop[imperfection]
+    )
     loops = schedule.walk(nodes.Loop)
     assert not is_perfectly_nested(loops[0])
     assert is_perfectly_nested(loops[1])
@@ -211,8 +219,8 @@ def test_get_loop_variable_name(parser):
 
 def test_get_loop_nest_variable_names(parser):
     """
-    Test that :func:`get_loop_nest_variable_names` correctly determines all loop
-    variable names in a nest.
+    Test that :func:`get_loop_nest_variable_names` correctly determines all
+    loop variable names in a nest.
     """
     schedule = get_schedule(parser, cs.quadruple_loop_with_1_assignment)
     indices = ["l", "k", "j", "i"]
@@ -222,8 +230,8 @@ def test_get_loop_nest_variable_names(parser):
 
 def test_is_independent_valueerror(parser):
     """
-    Test that a :class:`ValueError` is raised when :func:`is_independent` is called
-    with an imperfectly nested :class:`Loop`.
+    Test that a :class:`ValueError` is raised when :func:`is_independent` is
+    called with an imperfectly nested :class:`Loop`.
     """
     schedule = get_schedule(parser, cs.imperfectly_nested_double_loop_before)
     expected = "is_independent can only be applied to perfectly nested loops."
@@ -233,7 +241,8 @@ def test_is_independent_valueerror(parser):
 
 def test_is_not_independent_double_loop(parser):
     """
-    Test that :func:`is_independent` correctly identifies a dependent double loop.
+    Test that :func:`is_independent` correctly identifies a dependent double
+    loop.
     """
     schedule = get_schedule(parser, cs.dependent_double_loop)
     loops = schedule.walk(nodes.Loop)
@@ -245,7 +254,8 @@ def test_is_not_independent_double_loop(parser):
 
 def test_is_not_independent_triple_loop(parser):
     """
-    Test that :func:`is_independent` correctly identifies a dependent triple loop.
+    Test that :func:`is_independent` correctly identifies a dependent triple
+    loop.
     """
     schedule = get_schedule(parser, cs.dependent_triple_loop)
     loops = schedule.walk(nodes.Loop)
@@ -258,7 +268,8 @@ def test_is_not_independent_triple_loop(parser):
 
 def test_is_not_independent_triple_subloop(parser):
     """
-    Test that :func:`is_independent` correctly identifies a dependent triple loop.
+    Test that :func:`is_independent` correctly identifies a dependent triple
+    loop.
     """
     schedule = get_schedule(parser, cs.dependent_triple_subloop)
     loops = schedule.walk(nodes.Loop)

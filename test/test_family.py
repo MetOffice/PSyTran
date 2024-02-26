@@ -56,8 +56,8 @@ def test_get_relatives_typeerror2(parser, relative):
 
 def test_get_descendents_loop(parser, nest_depth, inclusive):
     """
-    Test that :func:`get_descendents` correctly finds the right number of descendents
-    of a loop.
+    Test that :func:`get_descendents` correctly finds the right number of
+    descendents of a loop.
     """
     schedule = get_schedule(parser, simple_loop_code(nest_depth))
     loops = schedule.walk(nodes.Loop)
@@ -72,8 +72,8 @@ def test_get_descendents_loop(parser, nest_depth, inclusive):
 
 def test_get_ancestors_loop(parser, nest_depth, inclusive):
     """
-    Test that :func:`get_ancestors` correctly finds the right number of ancestors of a
-    loop.
+    Test that :func:`get_ancestors` correctly finds the right number of
+    ancestors of a loop.
     """
     schedule = get_schedule(parser, simple_loop_code(nest_depth))
     loops = schedule.walk(nodes.Loop)
@@ -88,14 +88,18 @@ def test_get_ancestors_loop(parser, nest_depth, inclusive):
 
 def test_get_descendents_loop_depth(parser, nest_depth, inclusive):
     """
-    Test that :func:`get_descendents` correctly finds the right number of descendents
-    of a loop of a specified depth.
+    Test that :func:`get_descendents` correctly finds the right number of
+    descendents of a loop of a specified depth.
     """
     schedule = get_schedule(parser, simple_loop_code(nest_depth))
     loop = schedule.walk(nodes.Loop)[0]
     depth = loop.depth
     for i in range(nest_depth):
-        kwargs = {"inclusive": inclusive, "node_type": nodes.Loop, "depth": depth}
+        kwargs = {
+            "inclusive": inclusive,
+            "node_type": nodes.Loop,
+            "depth": depth,
+        }
         num_descendents = len(get_descendents(loop, **kwargs))
         assert num_descendents == (0 if not inclusive and i == 0 else 1)
         depth += 2
@@ -103,14 +107,18 @@ def test_get_descendents_loop_depth(parser, nest_depth, inclusive):
 
 def test_get_ancestors_loop_depth(parser, nest_depth, inclusive):
     """
-    Test that :func:`get_ancestors` correctly finds the right number of ancestors of
-    a loop of a specified depth.
+    Test that :func:`get_ancestors` correctly finds the right number of
+    ancestors of a loop of a specified depth.
     """
     schedule = get_schedule(parser, simple_loop_code(nest_depth))
     loop = schedule.walk(nodes.Loop)[nest_depth - 1]
     depth = loop.depth
     for i in range(nest_depth):
-        kwargs = {"inclusive": inclusive, "node_type": nodes.Loop, "depth": depth}
+        kwargs = {
+            "inclusive": inclusive,
+            "node_type": nodes.Loop,
+            "depth": depth,
+        }
         num_ancestors = len(get_ancestors(loop, **kwargs))
         assert num_ancestors == (0 if not inclusive and i == 0 else 1)
         depth -= 2
@@ -118,8 +126,8 @@ def test_get_ancestors_loop_depth(parser, nest_depth, inclusive):
 
 def test_get_descendents_assignment(parser, nest_depth, inclusive):
     """
-    Test that :func:`get_descendents` correctly finds the right number of descendents
-    of an assignment.
+    Test that :func:`get_descendents` correctly finds the right number of
+    descendents of an assignment.
     """
     schedule = get_schedule(parser, simple_loop_code(nest_depth))
     assignment = schedule.walk(nodes.Assignment)[0]
@@ -131,8 +139,8 @@ def test_get_descendents_assignment(parser, nest_depth, inclusive):
 
 def test_get_ancestors_assignment(parser, nest_depth, inclusive):
     """
-    Test that :func:`get_ancestors` correctly finds the right number of ancestors of
-    an assignment.
+    Test that :func:`get_ancestors` correctly finds the right number of
+    ancestors of an assignment.
     """
     schedule = get_schedule(parser, simple_loop_code(nest_depth))
     assignment = schedule.walk(nodes.Assignment)[0]
@@ -198,8 +206,8 @@ def test_has_ancestor_descendent(parser):
 
 def test_has_ancestor_name(parser):
     """
-    Test that :func:`has_ancestor` correctly determine whether nodes have ancestors
-    whose variables have particular names.
+    Test that :func:`has_ancestor` correctly determine whether nodes have
+    ancestors whose variables have particular names.
     """
     schedule = get_schedule(parser, cs.loop_with_1_assignment)
     assignment = schedule.walk(nodes.Assignment)[0]

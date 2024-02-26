@@ -16,8 +16,9 @@ def clause(request):
 
 def test_apply_kernels_directive_typeerror(parser):
     """
-    Test that a :class:`TypeError` is raised when :func:`apply_kernels_directive`
-    is called with options that aren't a :class:`dict`.
+    Test that a :class:`TypeError` is raised when
+    :func:`apply_kernels_directive` is called with options that aren't a
+    :class:`dict`.
     """
     schedule = get_schedule(parser, cs.loop_with_1_assignment)
     loops = schedule.walk(nodes.Loop)
@@ -41,7 +42,9 @@ def test_apply_kernels_directive_schedule_with_intrinsic_call(parser):
     Test that :func:`apply_kernels_directive` correctly applies a ``kernels``
     directive to a schedule containing a loop with an intrinsic call.
     """
-    schedule = get_schedule(parser, cs.loop_with_1_assignment_and_intrinsic_call)
+    schedule = get_schedule(
+        parser, cs.loop_with_1_assignment_and_intrinsic_call
+    )
     apply_kernels_directive(schedule)
     assert isinstance(schedule[0], ACCKernelsDirective)
 
