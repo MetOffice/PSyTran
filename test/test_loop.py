@@ -18,7 +18,8 @@ from psyacc.loop import (
     is_outer_loop,
     is_parallelisable,
     is_perfectly_nested,
-    is_simple_loop)
+    is_simple_loop,
+)
 from utils import get_schedule, simple_loop_code
 
 perfectly_nested_loop = {

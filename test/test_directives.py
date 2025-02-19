@@ -18,7 +18,8 @@ from psyacc.directives import (
     apply_kernels_directive,
     apply_loop_directive,
     has_kernels_directive,
-    has_loop_directive)
+    has_loop_directive,
+)
 from utils import get_schedule, has_clause
 
 

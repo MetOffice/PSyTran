@@ -16,7 +16,8 @@ from psyacc.family import (
     get_children,
     get_descendents,
     has_ancestor,
-    has_descendent)
+    has_descendent,
+)
 from utils import get_schedule, simple_loop_code
 
 get_relative = {

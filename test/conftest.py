@@ -10,12 +10,15 @@ import pytest
 
 # pylint: disable=W0611
 from psyclone.tests.conftest import fixture_fortran_reader
+
 # pylint: enable=W0611
 
 
-@pytest.fixture(name="clause",
-                params=["sequential", "gang", "vector", "collapse"],
-                scope="module")
+@pytest.fixture(
+    name="clause",
+    params=["sequential", "gang", "vector", "collapse"],
+    scope="module",
+)
 def fixture_clause(request):
     """Pytest fixture for loop clause."""
     return request.param
@@ -33,8 +36,9 @@ def fixture_dim(request):
     return request.param
 
 
-@pytest.fixture(name="imperfection",
-                params=["before", "after", "if"], scope="module")
+@pytest.fixture(
+    name="imperfection", params=["before", "after", "if"], scope="module"
+)
 def fixture_imperfection(request):
     """
     Pytest fixture determining whether a loop nest imperfection comes before
@@ -58,15 +62,17 @@ def fixture_nest_depth(request):
     return request.param
 
 
-@pytest.fixture(name="perfection",
-                params=["1_assign", "3_assigns", "if"], scope="module")
+@pytest.fixture(
+    name="perfection", params=["1_assign", "3_assigns", "if"], scope="module"
+)
 def fixture_perfection(request):
     """Pytest fixture for code found within a perfectly nested loop."""
     return request.param
 
 
-@pytest.fixture(name="relative",
-                params=["ancestor", "descendent"], scope="module")
+@pytest.fixture(
+    name="relative", params=["ancestor", "descendent"], scope="module"
+)
 def fixture_relative(request):
     """Pytest fixture for the type of relative."""
     return request.param
