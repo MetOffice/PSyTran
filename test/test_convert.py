@@ -7,20 +7,11 @@
 Unit tests for PSyACC's `convert` module.
 """
 
-import pytest
+from psyclone.psyir import nodes
 
 import code_snippets as cs
-from psyclone.psyir import nodes
-from utils import get_schedule
-
 from psyacc.convert import convert_array_notation
-
-
-@pytest.fixture(name="dim", params=[1, 2, 3])
-def fixture_dim(request):
-    """Pytest fixture for spatial dimension."""
-    return request.param
-
+from utils import get_schedule
 
 array_assignment = {
     1: cs.array_assignment_1d,

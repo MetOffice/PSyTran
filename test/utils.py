@@ -12,8 +12,7 @@ from psyacc import (
     has_collapse_clause,
     has_gang_clause,
     has_seq_clause,
-    has_vector_clause,
-)
+    has_vector_clause)
 
 __all__ = ["has_clause", "get_schedule", "simple_loop_code"]
 

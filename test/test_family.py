@@ -8,9 +8,7 @@ Unit tests for PSyACC's `family` module.
 """
 
 import pytest
-
 from psyclone.psyir import nodes
-from utils import get_schedule, simple_loop_code
 
 import code_snippets as cs
 from psyacc.family import (
@@ -18,30 +16,8 @@ from psyacc.family import (
     get_children,
     get_descendents,
     has_ancestor,
-    has_descendent,
-)
-
-
-@pytest.fixture(name="inclusive", params=[True, False])
-def fixture_inclusive(request):
-    """
-    Pytest fixture to control whether the current node is included in
-    searches.
-    """
-    return request.param
-
-
-@pytest.fixture(name="nest_depth", params=[1, 2, 3, 4])
-def fixture_nest_depth(request):
-    """Pytest fixture for depth of a loop nest."""
-    return request.param
-
-
-@pytest.fixture(name="relative", params=["ancestor", "descendent"])
-def fixture_relative(request):
-    """Pytest fixture for the type of relative."""
-    return request.param
-
+    has_descendent)
+from utils import get_schedule, simple_loop_code
 
 get_relative = {
     "descendent": get_descendents,

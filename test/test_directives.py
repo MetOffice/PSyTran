@@ -11,7 +11,6 @@ import pytest
 
 from psyclone.psyir import nodes
 from psyclone.transformations import ACCKernelsDirective, ACCLoopDirective
-from utils import get_schedule, has_clause
 
 import code_snippets as cs
 from psyacc.clauses import has_gang_clause, has_seq_clause, has_vector_clause
@@ -19,14 +18,8 @@ from psyacc.directives import (
     apply_kernels_directive,
     apply_loop_directive,
     has_kernels_directive,
-    has_loop_directive,
-)
-
-
-@pytest.fixture(name="clause", params=["sequential", "gang", "vector"])
-def fixture_clause(request):
-    """Pytest fixture for loop clause."""
-    return request.param
+    has_loop_directive)
+from utils import get_schedule, has_clause
 
 
 def test_apply_kernels_directive_typeerror(fortran_reader):

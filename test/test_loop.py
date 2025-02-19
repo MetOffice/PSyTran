@@ -10,7 +10,6 @@ Unit tests for PSyACC's `loop` module.
 import pytest
 
 from psyclone.psyir import nodes
-from utils import get_schedule, simple_loop_code
 
 import code_snippets as cs
 from psyacc.loop import (
@@ -19,30 +18,8 @@ from psyacc.loop import (
     is_outer_loop,
     is_parallelisable,
     is_perfectly_nested,
-    is_simple_loop,
-)
-
-
-@pytest.fixture(name="nest_depth", params=[1, 2, 3, 4])
-def fixture_nest_depth(request):
-    """Pytest fixture for depth of a loop nest."""
-    return request.param
-
-
-@pytest.fixture(name="perfection", params=["1_assign", "3_assigns", "if"])
-def fixture_perfection(request):
-    """Pytest fixture for code found within a perfectly nested loop."""
-    return request.param
-
-
-@pytest.fixture(name="imperfection", params=["before", "after", "if"])
-def fixture_imperfection(request):
-    """
-    Pytest fixture determining whether a loop nest imperfection comes before
-    or after a loop.
-    """
-    return request.param
-
+    is_simple_loop)
+from utils import get_schedule, simple_loop_code
 
 perfectly_nested_loop = {
     "1_assign": cs.loop_with_1_assignment,
