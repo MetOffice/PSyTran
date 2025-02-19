@@ -9,9 +9,10 @@ Unit tests for PSyACC's `loop` module.
 
 import pytest
 
-from psyclone.psyir import nodes
-
 import code_snippets as cs
+from psyclone.psyir import nodes
+from utils import get_schedule, simple_loop_code
+
 from psyacc.loop import (
     _check_loop,
     is_independent,
@@ -20,7 +21,6 @@ from psyacc.loop import (
     is_perfectly_nested,
     is_simple_loop,
 )
-from utils import get_schedule, simple_loop_code
 
 perfectly_nested_loop = {
     "1_assign": cs.loop_with_1_assignment,

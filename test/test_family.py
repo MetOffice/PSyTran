@@ -8,9 +8,10 @@ Unit tests for PSyACC's `family` module.
 """
 
 import pytest
-from psyclone.psyir import nodes
-
 import code_snippets as cs
+from psyclone.psyir import nodes
+from utils import get_schedule, simple_loop_code
+
 from psyacc.family import (
     get_ancestors,
     get_children,
@@ -18,7 +19,6 @@ from psyacc.family import (
     has_ancestor,
     has_descendent,
 )
-from utils import get_schedule, simple_loop_code
 
 get_relative = {
     "descendent": get_descendents,
