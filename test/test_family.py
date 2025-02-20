@@ -8,10 +8,10 @@ Unit tests for PSyACC's `family` module.
 """
 
 import pytest
-import code_snippets as cs
 from psyclone.psyir import nodes
 from utils import get_schedule, simple_loop_code
 
+import code_snippets as cs
 from psyacc.family import (
     get_ancestors,
     get_children,
