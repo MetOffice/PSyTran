@@ -8,6 +8,7 @@ Unit tests for PSyACC's `family` module.
 """
 
 import pytest
+
 from psyclone.psyir import nodes
 from utils import get_schedule, simple_loop_code
 

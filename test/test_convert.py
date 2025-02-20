@@ -7,10 +7,10 @@
 Unit tests for PSyACC's `convert` module.
 """
 
+import code_snippets as cs
 from psyclone.psyir import nodes
 from utils import get_schedule
 
-import code_snippets as cs
 from psyacc.convert import convert_array_notation
 
 array_assignment = {
