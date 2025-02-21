@@ -150,7 +150,7 @@ def test_apply_loop_collapse_imperfect_default(
     """
     if imperfection == "if":
         return
-  
+
     schedule = get_schedule(
         fortran_reader, imperfectly_nested_triple_loop2[imperfection]
     )
