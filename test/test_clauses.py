@@ -149,15 +149,15 @@ def test_apply_loop_collapse_imperfect_default(
     nest when the `collapse` keyword argument is not used.
     """
     if imperfection == "if":
-        pass
-    else:
-        schedule = get_schedule(
-            fortran_reader, imperfectly_nested_triple_loop2[imperfection]
-        )
-        loops = schedule.walk(nodes.Loop)
-        apply_kernels_directive(loops[0])
-        apply_loop_directive(loops[0], options={"collapse": collapse})
-        assert loops[0].parent.parent.collapse == 2
-        assert has_collapse_clause(loops[0])
-        assert has_collapse_clause(loops[1])
-        assert not has_collapse_clause(loops[2])
+        return
+  
+    schedule = get_schedule(
+        fortran_reader, imperfectly_nested_triple_loop2[imperfection]
+    )
+    loops = schedule.walk(nodes.Loop)
+    apply_kernels_directive(loops[0])
+    apply_loop_directive(loops[0], options={"collapse": collapse})
+    assert loops[0].parent.parent.collapse == 2
+    assert has_collapse_clause(loops[0])
+    assert has_collapse_clause(loops[1])
+    assert not has_collapse_clause(loops[2])
