@@ -15,7 +15,7 @@ from psyclone.transformations import ACCLoopDirective
 from utils import get_schedule, has_clause, simple_loop_code
 
 from psyacc.clauses import _prepare_loop_for_clause, has_collapse_clause
-from psyacc.directives import apply_loop_directive, apply_kernels_directive
+from psyacc.directives import apply_loop_directive, apply_acc_kernels_directive
 
 
 imperfectly_nested_triple_loop1 = {
@@ -48,7 +48,7 @@ def test_prepare_loop_for_clause_no_loop_dir(fortran_reader):
     """
     schedule = get_schedule(fortran_reader, cs.double_loop_with_1_assignment)
     loops = schedule.walk(nodes.Loop)
-    apply_kernels_directive(loops[0])
+    apply_acc_kernels_directive(loops[0])
     _prepare_loop_for_clause(loops[0])
     assert isinstance(loops[0].parent.parent, ACCLoopDirective)
 
@@ -59,7 +59,7 @@ def test_no_loop_clause(fortran_reader, nest_depth, clause):
     """
     schedule = get_schedule(fortran_reader, simple_loop_code(nest_depth))
     loops = schedule.walk(nodes.Loop)
-    apply_kernels_directive(loops[0])
+    apply_acc_kernels_directive(loops[0])
     for i in range(nest_depth):
         assert not has_clause[clause](loops[i])
 
@@ -81,7 +81,7 @@ def test_has_collapse_clause_kernels_no_loop(fortran_reader):
     """
     schedule = get_schedule(fortran_reader, cs.loop_with_1_assignment)
     loops = schedule.walk(nodes.Loop)
-    apply_kernels_directive(loops[0])
+    apply_acc_kernels_directive(loops[0])
     assert not has_collapse_clause(loops[0])
 
 
@@ -92,7 +92,7 @@ def test_has_collapse_clause_loop_no_collapse(fortran_reader):
     """
     schedule = get_schedule(fortran_reader, cs.loop_with_1_assignment)
     loops = schedule.walk(nodes.Loop)
-    apply_kernels_directive(loops[0])
+    apply_acc_kernels_directive(loops[0])
     apply_loop_directive(loops[0])
     assert not has_collapse_clause(loops[0])
 
@@ -103,7 +103,7 @@ def test_apply_loop_collapse(fortran_reader, collapse):
     """
     schedule = get_schedule(fortran_reader, simple_loop_code(collapse))
     loops = schedule.walk(nodes.Loop)
-    apply_kernels_directive(loops[0])
+    apply_acc_kernels_directive(loops[0])
     apply_loop_directive(loops[0], options={"collapse": collapse})
     assert loops[0].parent.parent.collapse == collapse
     for loop in loops:
@@ -116,7 +116,7 @@ def test_apply_loop_collapse_subnest(fortran_reader, collapse):
     """
     schedule = get_schedule(fortran_reader, simple_loop_code(collapse + 1))
     loops = schedule.walk(nodes.Loop)
-    apply_kernels_directive(loops[0])
+    apply_acc_kernels_directive(loops[0])
     apply_loop_directive(loops[0])
     apply_loop_directive(loops[-1])
     apply_loop_directive(loops[0], options={"collapse": collapse})
@@ -134,7 +134,7 @@ def test_apply_loop_collapse_default(fortran_reader, collapse):
     """
     schedule = get_schedule(fortran_reader, simple_loop_code(collapse))
     loops = schedule.walk(nodes.Loop)
-    apply_kernels_directive(loops[0])
+    apply_acc_kernels_directive(loops[0])
     apply_loop_directive(loops[0], options={"collapse": collapse})
     assert loops[0].parent.parent.collapse == collapse
     for loop in loops:
@@ -155,7 +155,7 @@ def test_apply_loop_collapse_imperfect_default(
         fortran_reader, imperfectly_nested_triple_loop2[imperfection]
     )
     loops = schedule.walk(nodes.Loop)
-    apply_kernels_directive(loops[0])
+    apply_acc_kernels_directive(loops[0])
     apply_loop_directive(loops[0], options={"collapse": collapse})
     assert loops[0].parent.parent.collapse == 2
     assert has_collapse_clause(loops[0])

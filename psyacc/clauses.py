@@ -9,7 +9,7 @@ OpenACC clauses associated with them, as well as for applying such clauses.
 """
 
 from psyacc.directives import (
-    has_kernels_directive,
+    has_acc_kernels_directive,
     apply_loop_directive,
     has_loop_directive,
 )
@@ -34,7 +34,7 @@ def _prepare_loop_for_clause(loop):
     :raises ValueError: if a ``kernels`` directive has not yet been applied.
     """
     _check_loop(loop)
-    if not has_kernels_directive(loop):
+    if not has_acc_kernels_directive(loop):
         raise ValueError(
             "Cannot apply a loop clause without a kernels directive."
         )
@@ -92,7 +92,7 @@ def has_collapse_clause(loop):
     :rtype: :py:class:`bool`
     """
     _check_loop(loop)
-    if not has_kernels_directive(loop):
+    if not has_acc_kernels_directive(loop):
         return False
     ancestors = get_ancestors(loop, inclusive=True)
     for i, current in enumerate(ancestors):

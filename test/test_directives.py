@@ -16,79 +16,81 @@ from utils import get_schedule, has_clause
 import code_snippets as cs
 from psyacc.clauses import has_gang_clause, has_seq_clause, has_vector_clause
 from psyacc.directives import (
-    apply_kernels_directive,
+    apply_acc_kernels_directive,
     apply_loop_directive,
-    has_kernels_directive,
+    has_acc_kernels_directive,
     has_loop_directive,
 )
 
 
-def test_apply_kernels_directive_typeerror(fortran_reader):
+def test_apply_acc_kernels_directive_typeerror(fortran_reader):
     """
     Test that a :class:`TypeError` is raised when
-    :func:`apply_kernels_directive` is called with options that aren't a
+    :func:`apply_acc_kernels_directive` is called with options that aren't a
     :class:`dict`.
     """
     schedule = get_schedule(fortran_reader, cs.loop_with_1_assignment)
     loops = schedule.walk(nodes.Loop)
     expected = "Expected a dict, not '<class 'int'>'."
     with pytest.raises(TypeError, match=expected):
-        apply_kernels_directive(loops[0], options=0)
+        apply_acc_kernels_directive(loops[0], options=0)
 
 
-def test_apply_kernels_directive_schedule(fortran_reader):
+def test_apply_acc_kernels_directive_schedule(fortran_reader):
     """
-    Test that :func:`apply_kernels_directive` correctly applies a ``kernels``
+    Test that :func:`apply_acc_kernels_directive` correctly applies a ``kernels``
     directive to a schedule.
     """
     schedule = get_schedule(fortran_reader, cs.loop_with_1_assignment)
-    apply_kernels_directive(schedule)
+    apply_acc_kernels_directive(schedule)
     assert isinstance(schedule[0], ACCKernelsDirective)
 
 
-def test_apply_kernels_directive_schedule_with_intrinsic_call(fortran_reader):
+def test_apply_acc_kernels_directive_schedule_with_intrinsic_call(
+    fortran_reader,
+):
     """
-    Test that :func:`apply_kernels_directive` correctly applies a ``kernels``
+    Test that :func:`apply_acc_kernels_directive` correctly applies a ``kernels``
     directive to a schedule containing a loop with an intrinsic call.
     """
     schedule = get_schedule(
         fortran_reader, cs.loop_with_1_assignment_and_intrinsic_call
     )
-    apply_kernels_directive(schedule)
+    apply_acc_kernels_directive(schedule)
     assert isinstance(schedule[0], ACCKernelsDirective)
 
 
-def test_apply_kernels_directive_loop(fortran_reader):
+def test_apply_acc_kernels_directive_loop(fortran_reader):
     """
-    Test that :func:`apply_kernels_directive` correctly applies a ``kernels``
+    Test that :func:`apply_acc_kernels_directive` correctly applies a ``kernels``
     directives to a loop.
     """
     schedule = get_schedule(fortran_reader, cs.loop_with_1_assignment)
     loops = schedule.walk(nodes.Loop)
-    apply_kernels_directive(loops[0])
+    apply_acc_kernels_directive(loops[0])
     assert isinstance(loops[0].parent.parent, ACCKernelsDirective)
-    assert has_kernels_directive(loops[0])
-    assert has_kernels_directive(loops)
+    assert has_acc_kernels_directive(loops[0])
+    assert has_acc_kernels_directive(loops)
 
 
 def test_has_no_kernels_directive(fortran_reader):
     """
-    Test that :func:`has_kernels_directive` correctly identifies no OpenACC
+    Test that :func:`has_acc_kernels_directive` correctly identifies no OpenACC
     kernels directives.
     """
     schedule = get_schedule(fortran_reader, cs.loop_with_1_assignment)
     loops = schedule.walk(nodes.Loop)
-    assert not has_kernels_directive(loops[0])
+    assert not has_acc_kernels_directive(loops[0])
 
 
 def test_has_no_kernels_directive_block(fortran_reader):
     """
-    Test that :func:`has_kernels_directive` correctly identifies no OpenACC
+    Test that :func:`has_acc_kernels_directive` correctly identifies no OpenACC
     kernels directives when applied to a block of code.
     """
     schedule = get_schedule(fortran_reader, cs.loop_with_1_assignment)
     loops = schedule.walk(nodes.Loop)
-    assert not has_kernels_directive(loops)
+    assert not has_acc_kernels_directive(loops)
 
 
 def test_force_apply_loop_directive(fortran_reader):
@@ -98,7 +100,7 @@ def test_force_apply_loop_directive(fortran_reader):
     """
     schedule = get_schedule(fortran_reader, cs.serial_loop)
     loops = schedule.walk(nodes.Loop)
-    apply_kernels_directive(loops[0])
+    apply_acc_kernels_directive(loops[0])
     apply_loop_directive(loops[0], options={"force": True})
     assert isinstance(loops[0].parent.parent, ACCLoopDirective)
 
@@ -110,7 +112,7 @@ def test_force_apply_loop_directive_with_seq_clause(fortran_reader):
     """
     schedule = get_schedule(fortran_reader, cs.serial_loop)
     loops = schedule.walk(nodes.Loop)
-    apply_kernels_directive(loops[0])
+    apply_acc_kernels_directive(loops[0])
     apply_loop_directive(loops[0], options={"force": True, "sequential": True})
     assert isinstance(loops[0].parent.parent, ACCLoopDirective)
     assert has_seq_clause(loops[0])
@@ -123,7 +125,7 @@ def test_apply_loop_directive_with_clause(fortran_reader, clause):
     """
     schedule = get_schedule(fortran_reader, cs.loop_with_1_assignment)
     loops = schedule.walk(nodes.Loop)
-    apply_kernels_directive(loops[0])
+    apply_acc_kernels_directive(loops[0])
     apply_loop_directive(loops[0], options={clause: True})
     assert isinstance(loops[0].parent.parent, ACCLoopDirective)
     assert has_clause[clause](loops[0])
@@ -136,7 +138,7 @@ def test_apply_loop_directive_with_gang_vector(fortran_reader):
     """
     schedule = get_schedule(fortran_reader, cs.loop_with_1_assignment)
     loops = schedule.walk(nodes.Loop)
-    apply_kernels_directive(loops[0])
+    apply_acc_kernels_directive(loops[0])
     apply_loop_directive(loops[0], options={"gang": True, "vector": True})
     assert isinstance(loops[0].parent.parent, ACCLoopDirective)
     assert has_gang_clause(loops[0])

@@ -20,16 +20,16 @@ from psyclone.transformations import ACCLoopTrans
 from psyacc.loop import _check_loop
 
 __all__ = [
-    "apply_kernels_directive",
-    "has_kernels_directive",
+    "apply_acc_kernels_directive",
+    "has_acc_kernels_directive",
     "apply_loop_directive",
     "has_loop_directive",
 ]
 
 
-def apply_kernels_directive(block, options=None):
+def apply_acc_kernels_directive(block, options=None):
     """
-    Apply a ``kernels`` directive to a block of code.
+    Apply an ACC ``kernels`` directive to a block of code.
 
     :arg block: the block of code to apply the directive to.
     :type block: :py:class:`list`
@@ -43,9 +43,9 @@ def apply_kernels_directive(block, options=None):
     ACCKernelsTrans().apply(block, options=options)
 
 
-def has_kernels_directive(node):
+def has_acc_kernels_directive(node):
     """
-    Determine whether a node is inside a ``kernels`` directive.
+    Determine whether a node is inside an ACC ``kernels`` directive.
 
     :arg node: the Node to check.
     :type node: :py:class:`Node`
@@ -54,7 +54,7 @@ def has_kernels_directive(node):
     :rtype: :py:class:`bool`
     """
     if isinstance(node, Iterable):
-        return has_kernels_directive(node[0])
+        return has_acc_kernels_directive(node[0])
     assert isinstance(node, nodes.Node)
     return bool(node.ancestor(ACCKernelsDirective))
 
@@ -74,7 +74,7 @@ def apply_loop_directive(loop, options=None):
     _check_loop(loop)
     if options is not None and not isinstance(options, dict):
         raise TypeError(f"Expected a dict, not '{type(options)}'.")
-    if not has_kernels_directive(loop):
+    if not has_acc_kernels_directive(loop):
         raise ValueError(
             "Cannot apply a loop directive without a kernels directive."
         )
@@ -94,4 +94,4 @@ def has_loop_directive(loop):
     assert isinstance(loop, nodes.Loop)
     return isinstance(
         loop.parent.parent, ACCLoopDirective
-    ) and has_kernels_directive(loop)
+    ) and has_acc_kernels_directive(loop)
