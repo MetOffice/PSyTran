@@ -10,8 +10,18 @@ import pytest
 
 # pylint: disable=W0611
 from psyclone.tests.conftest import fixture_fortran_reader
+from psyclone.transformations import ACCLoopTrans, OMPLoopTrans
 
 # pylint: enable=W0611
+
+
+@pytest.fixture(
+    name="directive", params=[ACCLoopTrans, OMPLoopTrans], scope="module"
+)
+def fixture_directive(request):
+    """Pytest fixture for loop transformations."""
+    directive = request.param()
+    return directive
 
 
 @pytest.fixture(

@@ -9,9 +9,8 @@ OpenACC clauses associated with them, as well as for applying such clauses.
 """
 
 from psyacc.directives import (
-    has_acc_kernels_directive,
-    apply_loop_directive,
     has_loop_directive,
+    _check_directive,
 )
 from psyacc.family import get_ancestors
 from psyacc.loop import _check_loop
@@ -24,22 +23,18 @@ __all__ = [
 ]
 
 
-def _prepare_loop_for_clause(loop):
+def _prepare_loop_for_clause(loop, directive):
     """
     Prepare to apply a clause to a ``loop`` directive.
 
-    :arg loop: the Loop Node to prepare.
-    :type loop: :py:class:`Loop`
+    :arg loop:       the Loop Node to prepare.
+    :type loop:      :py:class:`Loop`
+    :arg directive:  the directive to be applied
+    :type directive: :py:class:`Directive`
 
-    :raises ValueError: if a ``kernels`` directive has not yet been applied.
     """
     _check_loop(loop)
-    if not has_acc_kernels_directive(loop):
-        raise ValueError(
-            "Cannot apply a loop clause without a kernels directive."
-        )
-    if not has_loop_directive(loop):
-        apply_loop_directive(loop)
+    _check_directive(directive)
 
 
 def has_seq_clause(loop):
@@ -92,11 +87,12 @@ def has_collapse_clause(loop):
     :rtype: :py:class:`bool`
     """
     _check_loop(loop)
-    if not has_acc_kernels_directive(loop):
-        return False
+    # if not has_acc_kernels_directive(loop):
+    #     return False
     ancestors = get_ancestors(loop, inclusive=True)
     for i, current in enumerate(ancestors):
         if has_loop_directive(current):
+            print("got here")
             loop_dir = current.parent.parent
             collapse = loop_dir.collapse
             if collapse is None:

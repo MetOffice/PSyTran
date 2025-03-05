@@ -15,8 +15,9 @@ from psyclone.psyir.nodes.acc_directives import (
     ACCKernelsDirective,
     ACCLoopDirective,
 )
+from psyclone.psyir.nodes.omp_directives import OMPDoDirective
 from psyclone.psyir.transformations import ACCKernelsTrans
-from psyclone.transformations import ACCLoopTrans
+from psyclone.transformations import ACCLoopTrans, OMPLoopTrans
 from psyacc.loop import _check_loop
 
 __all__ = [
@@ -25,6 +26,23 @@ __all__ = [
     "apply_loop_directive",
     "has_loop_directive",
 ]
+
+
+def _check_directive(directive):
+    """
+    Determine whether the directive to be applied is supported by PSyclone.
+
+    :arg directive: the directive to check.
+    :type directive: :py:class:`Directive`
+
+    :returns: `True` if the directive is a PSyclone directive.
+    :rtype: py:class:`bool`
+    """
+    if not isinstance(directive, (ACCLoopTrans, OMPLoopTrans)):
+        raise ValueError(
+            f"Supplied directive type is not a supported loop directive, "
+            f"found {type(directive)}"
+        )
 
 
 def apply_acc_kernels_directive(block, options=None):
@@ -59,7 +77,7 @@ def has_acc_kernels_directive(node):
     return bool(node.ancestor(ACCKernelsDirective))
 
 
-def apply_loop_directive(loop, options=None):
+def apply_loop_directive(loop, directive, options=None):
     """
     Apply a ``loop`` directive.
 
@@ -69,16 +87,30 @@ def apply_loop_directive(loop, options=None):
     :type options: :py:class:`dict`
 
     :raises TypeError: if the options argument is not a dictionary.
-    :raises ValueError: if a ``kernels`` directive has not yet been applied.
+    :raises ValueError: if a ``kernels`` directive has not yet been applied to
+    a kernel trying to apply an ACC ``loop`` directive.
     """
-    _check_loop(loop)
+    # Check options is valid
     if options is not None and not isinstance(options, dict):
         raise TypeError(f"Expected a dict, not '{type(options)}'.")
-    if not has_acc_kernels_directive(loop):
-        raise ValueError(
-            "Cannot apply a loop directive without a kernels directive."
-        )
-    ACCLoopTrans().apply(loop, options=options)
+    # Check directive is valid
+    _check_directive(directive)
+
+    if isinstance(directive, ACCLoopTrans):
+        _check_loop(loop)
+        if not has_acc_kernels_directive(loop):
+            raise ValueError(
+                "Cannot apply an ACC loop directive without a kernels directive."
+            )
+    elif isinstance(directive, OMPLoopTrans):
+        if has_acc_kernels_directive(loop):
+            raise ValueError(
+                "Cannot apply an OMP loop directive to a kernel with an "
+                "ACC kernels directive."
+            )
+        _check_loop(loop)
+
+    directive.apply(loop, options=options)
 
 
 def has_loop_directive(loop):
@@ -88,10 +120,17 @@ def has_loop_directive(loop):
     :arg loop: the Loop Node to check.
     :type loop: :py:class:`Loop`
 
-    :returns: ``True`` if the Node has a ``loop`` directive, else ``False``.
+    :returns: ``True`` if the Node has a ``loop`` or ``do`` directive,
+              else ``False``.
     :rtype: :py:class:`bool`
     """
+    print(loop.parent.parent)
     assert isinstance(loop, nodes.Loop)
-    return isinstance(
+    if isinstance(
         loop.parent.parent, ACCLoopDirective
-    ) and has_acc_kernels_directive(loop)
+    ) and has_acc_kernels_directive(loop):
+        return True
+    if isinstance(loop.parent.parent, OMPDoDirective):
+        return True
+
+    return False

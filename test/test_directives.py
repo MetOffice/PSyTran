@@ -10,7 +10,13 @@ Unit tests for PSyACC's `directives` module.
 import pytest
 
 from psyclone.psyir import nodes
-from psyclone.transformations import ACCKernelsDirective, ACCLoopDirective
+from psyclone.psyir.nodes.omp_directives import OMPDoDirective
+from psyclone.transformations import (
+    ACCKernelsDirective,
+    ACCLoopDirective,
+    ACCLoopTrans,
+    OMPLoopTrans,
+)
 from utils import get_schedule, has_clause
 
 import code_snippets as cs
@@ -93,59 +99,70 @@ def test_has_no_kernels_directive_block(fortran_reader):
     assert not has_acc_kernels_directive(loops)
 
 
-def test_force_apply_loop_directive(fortran_reader):
+def test_force_apply_loop_directive(fortran_reader, directive):
     """
     Test that :func:`apply_loop_directive` correctly force-applies a ``loop``
     directive.
     """
     schedule = get_schedule(fortran_reader, cs.serial_loop)
     loops = schedule.walk(nodes.Loop)
-    apply_acc_kernels_directive(loops[0])
-    apply_loop_directive(loops[0], options={"force": True})
-    assert isinstance(loops[0].parent.parent, ACCLoopDirective)
+    if isinstance(directive, ACCLoopTrans):
+        apply_acc_kernels_directive(loops[0])
+        apply_loop_directive(loops[0], directive, options={"force": True})
+        assert isinstance(loops[0].parent.parent, ACCLoopDirective)
+    elif isinstance(directive, OMPLoopTrans):
+        apply_loop_directive(loops[0], directive, options={"force": True})
+        assert isinstance(loops[0].parent.parent, OMPDoDirective)
 
 
-def test_force_apply_loop_directive_with_seq_clause(fortran_reader):
+def test_force_apply_loop_directive_with_seq_clause(fortran_reader, directive):
     """
     Test that :func:`apply_loop_directive` correctly force-applies a ``loop``
-    directive with a ``seq`` clause.
+    directive with a ``seq`` clause for loops.
     """
     schedule = get_schedule(fortran_reader, cs.serial_loop)
     loops = schedule.walk(nodes.Loop)
-    apply_acc_kernels_directive(loops[0])
-    apply_loop_directive(loops[0], options={"force": True, "sequential": True})
-    assert isinstance(loops[0].parent.parent, ACCLoopDirective)
-    assert has_seq_clause(loops[0])
+    if isinstance(directive, ACCLoopTrans):
+        apply_acc_kernels_directive(loops[0])
+        apply_loop_directive(
+            loops[0], directive, options={"force": True, "sequential": True}
+        )
+        assert isinstance(loops[0].parent.parent, ACCLoopDirective)
+        assert has_seq_clause(loops[0])
 
 
-def test_apply_loop_directive_with_clause(fortran_reader, clause):
+def test_apply_loop_directive_with_clause(fortran_reader, clause, directive):
     """
     Test that :func:`apply_loop_directive` correctly applies a ``loop``
     directive with a clause.
     """
     schedule = get_schedule(fortran_reader, cs.loop_with_1_assignment)
     loops = schedule.walk(nodes.Loop)
-    apply_acc_kernels_directive(loops[0])
-    apply_loop_directive(loops[0], options={clause: True})
-    assert isinstance(loops[0].parent.parent, ACCLoopDirective)
-    assert has_clause[clause](loops[0])
+    if isinstance(directive, ACCLoopTrans):
+        apply_acc_kernels_directive(loops[0])
+        apply_loop_directive(loops[0], directive, options={clause: True})
+        assert isinstance(loops[0].parent.parent, ACCLoopDirective)
+        assert has_clause[clause](loops[0])
 
 
-def test_apply_loop_directive_with_gang_vector(fortran_reader):
+def test_apply_loop_directive_with_gang_vector(fortran_reader, directive):
     """
     Test that :func:`apply_loop_directive` correctly applies a ``loop``
     directive with ``gang`` and ``vector`` clauses.
     """
     schedule = get_schedule(fortran_reader, cs.loop_with_1_assignment)
     loops = schedule.walk(nodes.Loop)
-    apply_acc_kernels_directive(loops[0])
-    apply_loop_directive(loops[0], options={"gang": True, "vector": True})
-    assert isinstance(loops[0].parent.parent, ACCLoopDirective)
-    assert has_gang_clause(loops[0])
-    assert has_vector_clause(loops[0])
+    if isinstance(directive, ACCLoopTrans):
+        apply_acc_kernels_directive(loops[0])
+        apply_loop_directive(
+            loops[0], directive, options={"gang": True, "vector": True}
+        )
+        assert isinstance(loops[0].parent.parent, ACCLoopDirective)
+        assert has_gang_clause(loops[0])
+        assert has_vector_clause(loops[0])
 
 
-def test_apply_loop_directive_typeerror1(fortran_reader):
+def test_apply_loop_directive_typeerror1(fortran_reader, directive):
     """
     Test that a :class:`TypeError` is raised when :func:`apply_loop_directive`
     is called with something other than a :class:`Loop`.
@@ -157,10 +174,10 @@ def test_apply_loop_directive_typeerror1(fortran_reader):
         " '<class 'psyclone.psyir.nodes.assignment.Assignment'>'."
     )
     with pytest.raises(TypeError, match=expected):
-        apply_loop_directive(assignments[0])
+        apply_loop_directive(assignments[0], directive)
 
 
-def test_apply_loop_directive_typeerror2(fortran_reader):
+def test_apply_loop_directive_typeerror2(fortran_reader, directive):
     """
     Test that a :class:`TypeError` is raised when :func:`apply_loop_directive`
     is called with options that aren't a :class:`dict`.
@@ -169,19 +186,31 @@ def test_apply_loop_directive_typeerror2(fortran_reader):
     loops = schedule.walk(nodes.Loop)
     expected = "Expected a dict, not '<class 'int'>'."
     with pytest.raises(TypeError, match=expected):
-        apply_loop_directive(loops[0], options=0)
+        apply_loop_directive(loops[0], directive, options=0)
 
 
-def test_apply_loop_directive_valueerror(fortran_reader):
+def test_apply_loop_directive_valueerror(fortran_reader, directive):
     """
     Test that a :class:`ValueError` is raised when :func:`apply_loop_directive`
     is called to a loop with no ``kernels`` directive.
     """
     schedule = get_schedule(fortran_reader, cs.double_loop_with_1_assignment)
     loops = schedule.walk(nodes.Loop)
-    expected = "Cannot apply a loop directive without a kernels directive."
-    with pytest.raises(ValueError, match=expected):
-        apply_loop_directive(loops[0])
+    if isinstance(directive, ACCLoopTrans):
+        expected = (
+            "Cannot apply an ACC loop directive without a "
+            "kernels directive."
+        )
+        with pytest.raises(ValueError, match=expected):
+            apply_loop_directive(loops[0], directive)
+    if isinstance(directive, OMPLoopTrans):
+        apply_acc_kernels_directive(loops[0])
+        expected = (
+            "Cannot apply an OMP loop directive to a kernel with an "
+            "ACC kernels directive."
+        )
+        with pytest.raises(ValueError, match=expected):
+            apply_loop_directive(loops[0], directive)
 
 
 def test_has_no_loop_directive(fortran_reader):

@@ -11,7 +11,7 @@ import pytest
 
 import code_snippets as cs
 from psyclone.psyir import nodes
-from psyclone.transformations import ACCLoopDirective
+from psyclone.transformations import ACCLoopTrans
 from utils import get_schedule, has_clause, simple_loop_code
 
 from psyacc.clauses import _prepare_loop_for_clause, has_collapse_clause
@@ -29,28 +29,19 @@ imperfectly_nested_triple_loop2 = {
 }
 
 
-def test_prepare_loop_for_clause_no_kernels_error(fortran_reader):
+def test_prepare_loop_for_clause_no_loop_dir(fortran_reader, directive=None):
     """
-    Test that a :class:`ValueError` is raised when
-    :func:`_prepare_loop_for_clause` is called without a kernels directive.
-    """
-    schedule = get_schedule(fortran_reader, cs.double_loop_with_1_assignment)
-    loops = schedule.walk(nodes.Loop)
-    expected = "Cannot apply a loop clause without a kernels directive."
-    with pytest.raises(ValueError, match=expected):
-        _prepare_loop_for_clause(loops[0])
-
-
-def test_prepare_loop_for_clause_no_loop_dir(fortran_reader):
-    """
-    Test that :func:`_prepare_loop_for_clause` is correctly applied when there
+    Test that :func:`_prepare_loop_for_clause` raises an error when there
     is no loop directive.
     """
     schedule = get_schedule(fortran_reader, cs.double_loop_with_1_assignment)
     loops = schedule.walk(nodes.Loop)
-    apply_acc_kernels_directive(loops[0])
-    _prepare_loop_for_clause(loops[0])
-    assert isinstance(loops[0].parent.parent, ACCLoopDirective)
+    expected = (
+        "Supplied directive type is not a supported loop directive, "
+        "found <class 'NoneType'>"
+    )
+    with pytest.raises(ValueError, match=expected):
+        _prepare_loop_for_clause(loops[0], directive)
 
 
 def test_no_loop_clause(fortran_reader, nest_depth, clause):
@@ -85,41 +76,44 @@ def test_has_collapse_clause_kernels_no_loop(fortran_reader):
     assert not has_collapse_clause(loops[0])
 
 
-def test_has_collapse_clause_loop_no_collapse(fortran_reader):
+def test_has_collapse_clause_loop_no_collapse(fortran_reader, directive):
     """
     Test that :func:`has_collapse_clause` returns ``False`` for a loop with a
     ``loop`` directive but no ``collapse`` clause.
     """
     schedule = get_schedule(fortran_reader, cs.loop_with_1_assignment)
     loops = schedule.walk(nodes.Loop)
-    apply_acc_kernels_directive(loops[0])
-    apply_loop_directive(loops[0])
+    if isinstance(directive, ACCLoopTrans):
+        apply_acc_kernels_directive(loops[0])
+    apply_loop_directive(loops[0], directive)
     assert not has_collapse_clause(loops[0])
 
 
-def test_apply_loop_collapse(fortran_reader, collapse):
+def test_apply_loop_collapse(fortran_reader, collapse, directive):
     """
     Test that :func:`apply_loop_collapse` is correctly applied to a full nest.
     """
     schedule = get_schedule(fortran_reader, simple_loop_code(collapse))
     loops = schedule.walk(nodes.Loop)
-    apply_acc_kernels_directive(loops[0])
-    apply_loop_directive(loops[0], options={"collapse": collapse})
+    if isinstance(directive, ACCLoopTrans):
+        apply_acc_kernels_directive(loops[0])
+    apply_loop_directive(loops[0], directive, options={"collapse": collapse})
     assert loops[0].parent.parent.collapse == collapse
     for loop in loops:
         assert has_collapse_clause(loop)
 
 
-def test_apply_loop_collapse_subnest(fortran_reader, collapse):
+def test_apply_loop_collapse_subnest(fortran_reader, collapse, directive):
     """
     Test that :func:`apply_loop_collapse` is correctly applied to a sub-nest.
     """
     schedule = get_schedule(fortran_reader, simple_loop_code(collapse + 1))
     loops = schedule.walk(nodes.Loop)
-    apply_acc_kernels_directive(loops[0])
-    apply_loop_directive(loops[0])
-    apply_loop_directive(loops[-1])
-    apply_loop_directive(loops[0], options={"collapse": collapse})
+    if isinstance(directive, ACCLoopTrans):
+        apply_acc_kernels_directive(loops[0])
+    apply_loop_directive(loops[0], directive)
+    apply_loop_directive(loops[-1], directive)
+    apply_loop_directive(loops[0], directive, options={"collapse": collapse})
     assert loops[0].parent.parent.collapse == collapse
     for i in range(collapse):
         assert has_collapse_clause(loops[i])
@@ -127,22 +121,23 @@ def test_apply_loop_collapse_subnest(fortran_reader, collapse):
     assert not has_collapse_clause(loops[-1])
 
 
-def test_apply_loop_collapse_default(fortran_reader, collapse):
+def test_apply_loop_collapse_default(fortran_reader, collapse, directive):
     """
     Test that :func:`apply_loop_collapse` is correctly applied to a full nest
     when the `collapse` keyword argument is not used.
     """
     schedule = get_schedule(fortran_reader, simple_loop_code(collapse))
     loops = schedule.walk(nodes.Loop)
-    apply_acc_kernels_directive(loops[0])
-    apply_loop_directive(loops[0], options={"collapse": collapse})
+    if isinstance(directive, ACCLoopTrans):
+        apply_acc_kernels_directive(loops[0])
+    apply_loop_directive(loops[0], directive, options={"collapse": collapse})
     assert loops[0].parent.parent.collapse == collapse
     for loop in loops:
         assert has_collapse_clause(loop)
 
 
 def test_apply_loop_collapse_imperfect_default(
-    fortran_reader, imperfection, collapse
+    fortran_reader, imperfection, collapse, directive
 ):
     """
     Test that :func:`apply_loop_collapse` is correctly applied to an imperfect
@@ -155,8 +150,9 @@ def test_apply_loop_collapse_imperfect_default(
         fortran_reader, imperfectly_nested_triple_loop2[imperfection]
     )
     loops = schedule.walk(nodes.Loop)
-    apply_acc_kernels_directive(loops[0])
-    apply_loop_directive(loops[0], options={"collapse": collapse})
+    if isinstance(directive, ACCLoopTrans):
+        apply_acc_kernels_directive(loops[0])
+    apply_loop_directive(loops[0], directive, options={"collapse": collapse})
     assert loops[0].parent.parent.collapse == 2
     assert has_collapse_clause(loops[0])
     assert has_collapse_clause(loops[1])
