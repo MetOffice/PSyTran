@@ -1,6 +1,6 @@
 # Directories
 build/
-docs/source/demos/
+docs/source/demos/outputs
 outputs/
 psyacc.egg-info/
 __pycache__/
