@@ -47,7 +47,11 @@
 # module of PSyclone. ::
 
 from psyclone.psyir import nodes
-from psyacc import apply_kernels_directive, apply_loop_directive, is_outer_loop
+from psyacc import (
+    apply_acc_kernels_directive,
+    apply_loop_directive,
+    is_outer_loop,
+)
 
 # In the demos so far, we have built up transformation scripts piece by piece.
 # This was done for demonstration purposes; in many cases, it is easier to
@@ -69,8 +73,10 @@ def trans(psy):
     outer_loop = outer_loops[0]
 
     # Insert OpenACC syntax
-    apply_kernels_directive(outer_loop)
-    apply_loop_directive(outer_loop, options={"collapse": 2})
+    apply_acc_kernels_directive(outer_loop)
+    apply_loop_directive(
+        outer_loop, directive=nodes.ACCLoopDirective, options={"collapse": 2}
+    )
     return psy
 
 

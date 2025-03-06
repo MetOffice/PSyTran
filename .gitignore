@@ -1,7 +1,7 @@
 # Directories
 build/
-docs/source/demos/outputs
-outputs/
+docs/source/demos/outputs/
+demos/outputs/
 psyacc.egg-info/
 __pycache__/
 .psyclone/

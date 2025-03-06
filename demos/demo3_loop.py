@@ -36,7 +36,11 @@
 # module of PSyclone. ::
 
 from psyclone.psyir import nodes
-from psyacc import apply_kernels_directive, apply_loop_directive, is_outer_loop
+from psyacc import (
+    apply_acc_kernels_directive,
+    apply_loop_directive,
+    is_outer_loop,
+)
 
 # We already saw how to extract a loop from the schedule and apply an OpenACC
 # ``kernels`` directive to it. In this case, there are two loops. Loops are
@@ -59,7 +63,7 @@ def apply_openacc_kernels(psy):
     outer_loop = outer_loops[0]
 
     # Insert OpenACC syntax
-    apply_kernels_directive(outer_loop)
+    apply_acc_kernels_directive(outer_loop)
     return psy
 
 
@@ -71,7 +75,7 @@ def apply_openacc_kernels(psy):
 def apply_openacc_loops(psy):
     schedule = psy.children[0]
     for loop in schedule.walk(nodes.Loop):
-        apply_loop_directive(loop)
+        apply_loop_directive(loop, directive=nodes.ACCLoopDirective)
     return psy
 
 
@@ -105,9 +109,15 @@ def apply_openacc_loops_with_clauses(psy):
     schedule = psy.children[0]
     for loop in schedule.walk(nodes.Loop):
         if is_outer_loop(loop):
-            apply_loop_directive(loop, options={"gang": True, "vector": True})
+            apply_loop_directive(
+                loop,
+                directive=nodes.ACCLoopDirective,
+                options={"gang": True, "vector": True},
+            )
         else:
-            apply_loop_directive(loop, options={"seq": True})
+            apply_loop_directive(
+                loop, directive=nodes.ACCLoopDirective, options={"seq": True}
+            )
     return psy
 
 
