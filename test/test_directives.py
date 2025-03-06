@@ -51,8 +51,8 @@ def test_apply_acc_kernels_directive_typeerror(fortran_reader):
 
 def test_apply_acc_kernels_directive_schedule(fortran_reader):
     """
-    Test that :func:`apply_acc_kernels_directive` correctly applies a ``kernels``
-    directive to a schedule.
+    Test that :func:`apply_acc_kernels_directive` correctly applies a
+    ``kernels`` directive to a schedule.
     """
     schedule = get_schedule(fortran_reader, cs.loop_with_1_assignment)
     apply_acc_kernels_directive(schedule)
@@ -63,8 +63,9 @@ def test_apply_acc_kernels_directive_schedule_with_intrinsic_call(
     fortran_reader,
 ):
     """
-    Test that :func:`apply_acc_kernels_directive` correctly applies a ``kernels``
-    directive to a schedule containing a loop with an intrinsic call.
+    Test that :func:`apply_acc_kernels_directive` correctly applies a
+    ``kernels`` directive to a schedule containing a loop with an intrinsic
+    call.
     """
     schedule = get_schedule(
         fortran_reader, cs.loop_with_1_assignment_and_intrinsic_call
@@ -75,8 +76,8 @@ def test_apply_acc_kernels_directive_schedule_with_intrinsic_call(
 
 def test_apply_acc_kernels_directive_loop(fortran_reader):
     """
-    Test that :func:`apply_acc_kernels_directive` correctly applies a ``kernels``
-    directives to a loop.
+    Test that :func:`apply_acc_kernels_directive` correctly applies a
+    ``kernels`` directives to a loop.
     """
     schedule = get_schedule(fortran_reader, cs.loop_with_1_assignment)
     loops = schedule.walk(nodes.Loop)
