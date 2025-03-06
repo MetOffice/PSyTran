@@ -47,6 +47,7 @@
 # module of PSyclone. ::
 
 from psyclone.psyir import nodes
+from psyclone.transformations import ACCLoopTrans
 from psyacc import (
     apply_acc_kernels_directive,
     apply_loop_directive,
@@ -75,7 +76,7 @@ def trans(psy):
     # Insert OpenACC syntax
     apply_acc_kernels_directive(outer_loop)
     apply_loop_directive(
-        outer_loop, directive=nodes.ACCLoopDirective, options={"collapse": 2}
+        outer_loop, directive=ACCLoopTrans, options={"collapse": 2}
     )
     return psy
 

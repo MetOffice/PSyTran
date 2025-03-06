@@ -36,6 +36,7 @@
 # module of PSyclone. ::
 
 from psyclone.psyir import nodes
+from psyclone.transformations import ACCLoopTrans
 from psyacc import (
     apply_acc_kernels_directive,
     apply_loop_directive,
@@ -75,7 +76,7 @@ def apply_openacc_kernels(psy):
 def apply_openacc_loops(psy):
     schedule = psy.children[0]
     for loop in schedule.walk(nodes.Loop):
-        apply_loop_directive(loop, directive=nodes.ACCLoopDirective)
+        apply_loop_directive(loop, directive=ACCLoopTrans)
     return psy
 
 
@@ -111,12 +112,12 @@ def apply_openacc_loops_with_clauses(psy):
         if is_outer_loop(loop):
             apply_loop_directive(
                 loop,
-                directive=nodes.ACCLoopDirective,
+                directive=ACCLoopTrans,
                 options={"gang": True, "vector": True},
             )
         else:
             apply_loop_directive(
-                loop, directive=nodes.ACCLoopDirective, options={"seq": True}
+                loop, directive=ACCLoopTrans, options={"seq": True}
             )
     return psy
 
