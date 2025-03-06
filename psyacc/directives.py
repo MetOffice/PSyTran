@@ -11,11 +11,15 @@ applying such directives.
 
 from collections.abc import Iterable
 from psyclone.psyir import nodes
-from psyclone.psyir.nodes.acc_directives import (
+from psyclone.psyir.nodes import (
     ACCKernelsDirective,
     ACCLoopDirective,
+    OMPDoDirective,
+    OMPLoopDirective,
+    OMPParallelDoDirective,
+    OMPTeamsDistributeParallelDoDirective,
+    OMPTeamsLoopDirective,
 )
-from psyclone.psyir.nodes.omp_directives import OMPDoDirective
 from psyclone.psyir.transformations import ACCKernelsTrans
 from psyclone.transformations import ACCLoopTrans, OMPLoopTrans
 from psyacc.loop import _check_loop
@@ -93,22 +97,23 @@ def apply_loop_directive(loop, directive, options=None):
     # Check options is valid
     if options is not None and not isinstance(options, dict):
         raise TypeError(f"Expected a dict, not '{type(options)}'.")
-    # Check directive is valid
+    # Check directive is valid/supported
     _check_directive(directive)
+    # Check loop is valid
+    _check_loop(loop)
 
     if isinstance(directive, ACCLoopTrans):
-        _check_loop(loop)
         if not has_acc_kernels_directive(loop):
             raise ValueError(
-                "Cannot apply an ACC loop directive without a kernels directive."
+                "Cannot apply an ACC loop directive without a kernels "
+                "directive."
             )
-    elif isinstance(directive, OMPLoopTrans):
+    if isinstance(directive, OMPLoopTrans):
         if has_acc_kernels_directive(loop):
             raise ValueError(
                 "Cannot apply an OMP loop directive to a kernel with an "
                 "ACC kernels directive."
             )
-        _check_loop(loop)
 
     directive.apply(loop, options=options)
 
@@ -130,7 +135,16 @@ def has_loop_directive(loop):
         loop.parent.parent, ACCLoopDirective
     ) and has_acc_kernels_directive(loop):
         return True
-    if isinstance(loop.parent.parent, OMPDoDirective):
+    if isinstance(
+        loop.parent.parent,
+        (
+            OMPDoDirective,
+            OMPLoopDirective,
+            OMPParallelDoDirective,
+            OMPTeamsDistributeParallelDoDirective,
+            OMPTeamsLoopDirective,
+        ),
+    ):
         return True
 
     return False

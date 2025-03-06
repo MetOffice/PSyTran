@@ -73,6 +73,22 @@ def fixture_nest_depth(request):
 
 
 @pytest.fixture(
+    name="omp_directive",
+    params=[
+        "do",
+        "loop",
+        "paralleldo",
+        "teamsloop",
+        "teamsdistributeparalleldo",
+    ],
+    scope="module",
+)
+def fixture_omp_directive(request):
+    """Pytest fixture for omp directive parameter of OMPLoopTrans"""
+    return request.param
+
+
+@pytest.fixture(
     name="perfection", params=["1_assign", "3_assigns", "if"], scope="module"
 )
 def fixture_perfection(request):

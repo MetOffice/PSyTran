@@ -10,7 +10,13 @@ Unit tests for PSyACC's `directives` module.
 import pytest
 
 from psyclone.psyir import nodes
-from psyclone.psyir.nodes.omp_directives import OMPDoDirective
+from psyclone.psyir.nodes import (
+    OMPDoDirective,
+    OMPLoopDirective,
+    OMPParallelDoDirective,
+    OMPTeamsDistributeParallelDoDirective,
+    OMPTeamsLoopDirective,
+)
 from psyclone.transformations import (
     ACCKernelsDirective,
     ACCLoopDirective,
@@ -26,6 +32,7 @@ from psyacc.directives import (
     apply_loop_directive,
     has_acc_kernels_directive,
     has_loop_directive,
+    _check_directive,
 )
 
 
@@ -79,6 +86,33 @@ def test_apply_acc_kernels_directive_loop(fortran_reader):
     assert has_acc_kernels_directive(loops)
 
 
+def test_check_directive(directive, omp_directive):
+    """
+    Test that `_check_directive` correctly identifies allowed loop directives.
+    """
+    # Check that all types of OMP loop directives are allowed
+    if isinstance(directive, OMPLoopTrans):
+        directive = OMPLoopTrans(omp_directive=omp_directive)
+        print(type(directive))
+        _check_directive(directive)
+    # ACC directive allowed
+    _check_directive(directive)
+
+
+def test_check_directive_unsupported(directive=None):
+    """
+    Test that `_check_directive` correctly raises and error when an unsupported
+    loop directive is passed.
+    """
+    # Not supported
+    expected = (
+        "Supplied directive type is not a supported loop directive, "
+        "found <class 'NoneType'>"
+    )
+    with pytest.raises(ValueError, match=expected):
+        _check_directive(directive)
+
+
 def test_has_no_kernels_directive(fortran_reader):
     """
     Test that :func:`has_acc_kernels_directive` correctly identifies no OpenACC
@@ -99,7 +133,7 @@ def test_has_no_kernels_directive_block(fortran_reader):
     assert not has_acc_kernels_directive(loops)
 
 
-def test_force_apply_loop_directive(fortran_reader, directive):
+def test_force_apply_loop_directive(fortran_reader, directive, omp_directive):
     """
     Test that :func:`apply_loop_directive` correctly force-applies a ``loop``
     directive.
@@ -110,9 +144,28 @@ def test_force_apply_loop_directive(fortran_reader, directive):
         apply_acc_kernels_directive(loops[0])
         apply_loop_directive(loops[0], directive, options={"force": True})
         assert isinstance(loops[0].parent.parent, ACCLoopDirective)
+    # For OMP there are several directives that can be passed to OMPLoop
     elif isinstance(directive, OMPLoopTrans):
+        directive = OMPLoopTrans(omp_directive=omp_directive)
         apply_loop_directive(loops[0], directive, options={"force": True})
-        assert isinstance(loops[0].parent.parent, OMPDoDirective)
+        match omp_directive:
+            case "do":
+                assert isinstance(loops[0].parent.parent, OMPDoDirective)
+            case "loop":
+                assert isinstance(loops[0].parent.parent, OMPLoopDirective)
+            case "paralleldo":
+                assert isinstance(
+                    loops[0].parent.parent, OMPParallelDoDirective
+                )
+            case "teamsdistributeparalleldo":
+                assert isinstance(
+                    loops[0].parent.parent,
+                    OMPTeamsDistributeParallelDoDirective,
+                )
+            case "teamsloop":
+                assert isinstance(
+                    loops[0].parent.parent, OMPTeamsLoopDirective
+                )
 
 
 def test_force_apply_loop_directive_with_seq_clause(fortran_reader, directive):
