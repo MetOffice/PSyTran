@@ -112,12 +112,12 @@ def apply_openacc_loops_with_clauses(psy):
         if is_outer_loop(loop):
             apply_loop_directive(
                 loop,
-                directive=ACCLoopTrans,
+                directive=ACCLoopTrans(),
                 options={"gang": True, "vector": True},
             )
         else:
             apply_loop_directive(
-                loop, directive=ACCLoopTrans, options={"seq": True}
+                loop, directive=ACCLoopTrans(), options={"seq": True}
             )
     return psy
 
