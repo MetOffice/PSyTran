@@ -1,6 +1,7 @@
 # Directories
 build/
 docs/source/demos/outputs/
+docs/source/demos/fortran/
 demos/outputs/
 psyacc.egg-info/
 __pycache__/

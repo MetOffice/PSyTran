@@ -20,8 +20,7 @@ from psyclone.transformations import ACCLoopTrans, OMPLoopTrans
 )
 def fixture_directive(request):
     """Pytest fixture for loop transformations."""
-    directive = request.param()
-    return directive
+    return request.param()
 
 
 @pytest.fixture(

@@ -39,8 +39,7 @@ def _check_directive(directive):
     :arg directive: the directive to check.
     :type directive: :py:class:`Directive`
 
-    :returns: `True` if the directive is a PSyclone directive.
-    :rtype: py:class:`bool`
+    :raises: ValueError: if the directive is not a PSyclone loop trans object.
     """
     if not isinstance(directive, (ACCLoopTrans, OMPLoopTrans)):
         raise ValueError(

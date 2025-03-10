@@ -246,7 +246,9 @@ def test_apply_loop_directive_typeerror2(fortran_reader, directive):
 def test_apply_loop_directive_valueerror(fortran_reader, directive):
     """
     Test that a :class:`ValueError` is raised when :func:`apply_loop_directive`
-    is called to a loop with no ``kernels`` directive.
+    is called to apply an ACC loop directive with no ``kernels`` directive
+    present OR is called to apply an OMP loop directive when a ``kernels``
+    directive is present.
     """
     schedule = get_schedule(fortran_reader, cs.double_loop_with_1_assignment)
     loops = schedule.walk(nodes.Loop)

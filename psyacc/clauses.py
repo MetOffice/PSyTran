@@ -87,12 +87,9 @@ def has_collapse_clause(loop):
     :rtype: :py:class:`bool`
     """
     _check_loop(loop)
-    # if not has_acc_kernels_directive(loop):
-    #     return False
     ancestors = get_ancestors(loop, inclusive=True)
     for i, current in enumerate(ancestors):
         if has_loop_directive(current):
-            print("got here")
             loop_dir = current.parent.parent
             collapse = loop_dir.collapse
             if collapse is None:

@@ -76,7 +76,7 @@ def apply_openacc_kernels(psy):
 def apply_openacc_loops(psy):
     schedule = psy.children[0]
     for loop in schedule.walk(nodes.Loop):
-        apply_loop_directive(loop, directive=ACCLoopTrans)
+        apply_loop_directive(loop, directive=ACCLoopTrans())
     return psy
 
 
