@@ -1,8 +1,7 @@
 # Directories
 build/
-docs/source/demos/outputs/
-docs/source/demos/fortran/
-demos/outputs/
+docs/source/demos/
+outputs/
 psyacc.egg-info/
 __pycache__/
 .psyclone/

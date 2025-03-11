@@ -166,51 +166,54 @@ def test_force_apply_loop_directive(fortran_reader, directive, omp_directive):
                 )
 
 
-def test_force_apply_loop_directive_with_seq_clause(fortran_reader, directive):
+def test_force_apply_loop_directive_with_seq_clause(
+    fortran_reader, directive=ACCLoopTrans()
+):
     """
     Test that :func:`apply_loop_directive` correctly force-applies a ``loop``
     directive with a ``seq`` clause for loops.
     """
     schedule = get_schedule(fortran_reader, cs.serial_loop)
     loops = schedule.walk(nodes.Loop)
-    if isinstance(directive, ACCLoopTrans):
-        apply_acc_kernels_directive(loops[0])
-        apply_loop_directive(
-            loops[0], directive, options={"force": True, "sequential": True}
-        )
-        assert isinstance(loops[0].parent.parent, ACCLoopDirective)
-        assert has_seq_clause(loops[0])
+    apply_acc_kernels_directive(loops[0])
+    apply_loop_directive(
+        loops[0], directive, options={"force": True, "sequential": True}
+    )
+    assert isinstance(loops[0].parent.parent, ACCLoopDirective)
+    assert has_seq_clause(loops[0])
 
 
-def test_apply_loop_directive_with_clause(fortran_reader, clause, directive):
+def test_apply_loop_directive_with_clause(
+    fortran_reader, clause, directive=ACCLoopTrans()
+):
     """
     Test that :func:`apply_loop_directive` correctly applies a ``loop``
     directive with a clause.
     """
     schedule = get_schedule(fortran_reader, cs.loop_with_1_assignment)
     loops = schedule.walk(nodes.Loop)
-    if isinstance(directive, ACCLoopTrans):
-        apply_acc_kernels_directive(loops[0])
-        apply_loop_directive(loops[0], directive, options={clause: True})
-        assert isinstance(loops[0].parent.parent, ACCLoopDirective)
-        assert has_clause[clause](loops[0])
+    apply_acc_kernels_directive(loops[0])
+    apply_loop_directive(loops[0], directive, options={clause: True})
+    assert isinstance(loops[0].parent.parent, ACCLoopDirective)
+    assert has_clause[clause](loops[0])
 
 
-def test_apply_loop_directive_with_gang_vector(fortran_reader, directive):
+def test_apply_loop_directive_with_gang_vector(
+    fortran_reader, directive=ACCLoopTrans()
+):
     """
     Test that :func:`apply_loop_directive` correctly applies a ``loop``
     directive with ``gang`` and ``vector`` clauses.
     """
     schedule = get_schedule(fortran_reader, cs.loop_with_1_assignment)
     loops = schedule.walk(nodes.Loop)
-    if isinstance(directive, ACCLoopTrans):
-        apply_acc_kernels_directive(loops[0])
-        apply_loop_directive(
-            loops[0], directive, options={"gang": True, "vector": True}
-        )
-        assert isinstance(loops[0].parent.parent, ACCLoopDirective)
-        assert has_gang_clause(loops[0])
-        assert has_vector_clause(loops[0])
+    apply_acc_kernels_directive(loops[0])
+    apply_loop_directive(
+        loops[0], directive, options={"gang": True, "vector": True}
+    )
+    assert isinstance(loops[0].parent.parent, ACCLoopDirective)
+    assert has_gang_clause(loops[0])
+    assert has_vector_clause(loops[0])
 
 
 def test_apply_loop_directive_typeerror1(fortran_reader, directive):

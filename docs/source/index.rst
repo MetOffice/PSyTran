@@ -6,7 +6,7 @@
 Welcome to PSyACC's documentation!
 ==================================
 
-PSyACC is a Python package for streamlining OpenMP CPU and OpenACC GPU porting
+PSyACC is a Python package for streamlining OpenMP and OpenACC CPU/GPU porting
 efforts using the `PSyclone <https://github.com/stfc/PSyclone>`__
 domain-specific compiler and code transformation tool.
 
