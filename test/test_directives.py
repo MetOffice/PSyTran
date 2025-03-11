@@ -94,8 +94,6 @@ def test_check_directive(directive, omp_directive):
     # Check that all types of OMP loop directives are allowed
     if isinstance(directive, OMPLoopTrans):
         directive = OMPLoopTrans(omp_directive=omp_directive)
-        _check_directive(directive)
-    # ACC directive allowed
     _check_directive(directive)
 
 
