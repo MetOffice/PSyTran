@@ -1,6 +1,6 @@
 # (C) Crown Copyright 2023, Met Office. All rights reserved.
 #
-# This file is part of PSyACC and is released under the BSD 3-Clause license.
+# This file is part of PSyTran and is released under the BSD 3-Clause license.
 # See LICENSE in the root of the repository for full licensing details.
 
 r"""
@@ -11,7 +11,7 @@ nests.
 
 from collections.abc import Iterable
 from psyclone.psyir import nodes
-from psyacc.family import get_children, get_descendents
+from psytran.family import get_children, get_descendents
 
 __all__ = [
     "is_outer_loop",

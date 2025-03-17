@@ -1,10 +1,10 @@
 # (C) Crown Copyright 2023, Met Office. All rights reserved.
 #
-# This file is part of PSyACC and is released under the BSD 3-Clause license.
+# This file is part of PSyTran and is released under the BSD 3-Clause license.
 # See LICENSE in the root of the repository for full licensing details.
 
 """
-Unit tests for PSyACC's `directives` module.
+Unit tests for PSyTran's `directives` module.
 """
 
 import pytest
@@ -26,8 +26,8 @@ from psyclone.transformations import (
 from utils import get_schedule, has_clause
 
 import code_snippets as cs
-from psyacc.clauses import has_gang_clause, has_seq_clause, has_vector_clause
-from psyacc.directives import (
+from psytran.clauses import has_gang_clause, has_seq_clause, has_vector_clause
+from psytran.directives import (
     apply_acc_kernels_directive,
     apply_loop_directive,
     has_acc_kernels_directive,

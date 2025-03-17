@@ -1,7 +1,7 @@
 # ..
 #    (C) Crown Copyright 2023, Met Office. All rights reserved.
 #
-#    This file is part of PSyACC and is released under the BSD 3-Clause
+#    This file is part of PSyTran and is released under the BSD 3-Clause
 #    license. See LICENSE in the root of the repository for full licensing
 #    details.
 #
@@ -9,11 +9,11 @@
 # .. # pylint: disable=C0116
 #
 #
-# Demo 3: Applying OpenACC ``loop`` directives using PSyACC
+# Demo 3: Applying OpenACC ``loop`` directives using PSyTran
 # =========================================================
 #
 # The `previous demo <demo2_kernels.py.html>`__ showed how to insert OpenACC
-# ``kernels`` directives into Fortran code using PSyACC. Such directives mark
+# ``kernels`` directives into Fortran code using PSyTran. Such directives mark
 # out sections of code to be run on the GPU. In this demo, we additionally
 # apply OpenACC `loop` directives to loops within such regions and configure
 # them with different clauses.
@@ -32,12 +32,12 @@
 #    :language: bash
 #    :lines: 8-
 #
-# Again, begin by importing from the namespace PSyACC, as well as the ``nodes``
+# Again, begin by importing from the namespace PSyTran, as well as the ``nodes``
 # module of PSyclone. ::
 
 from psyclone.psyir import nodes
 from psyclone.transformations import ACCLoopTrans
-from psyacc import (
+from psytran import (
     apply_acc_kernels_directive,
     apply_loop_directive,
     is_outer_loop,
@@ -48,7 +48,7 @@ from psyacc import (
 # parsed by PSyclone according to depth, so in a simple example such as this we
 # can easily infer which loop is the first and which is the second. However,
 # this kind of information isn't available in general. We can make use of
-# :py:func:`psyacc.loop.is_outer_loop` to query whether a loop is outer-most in
+# :py:func:`psytran.loop.is_outer_loop` to query whether a loop is outer-most in
 # its loop nest. Inspecting the API documentation, we see that this is a
 # Boolean-valued function, which means we can use :py:func:`filter` to extract
 # only the loops for which it returns ``True``. ::
@@ -69,7 +69,7 @@ def apply_openacc_kernels(psy):
 
 
 # Next, we apply ``loop`` directives to every loop using
-# :py:class:`psyacc.directives.apply_loop_directive`. All this does is mark
+# :py:class:`psytran.directives.apply_loop_directive`. All this does is mark
 # them out; we will add clauses subsequently. ::
 
 
@@ -90,9 +90,9 @@ def apply_openacc_loops(psy):
 #
 # A good general approach is to apply both ``gang`` and ``vector`` parallelism
 # to outer loops and ``seq`` to all other loops in the nest. We can again use
-# :py:func:`psyacc.loop.is_outer_loop` to query whether a loop is outer-most or
+# :py:func:`psytran.loop.is_outer_loop` to query whether a loop is outer-most or
 # not. If so, we can pass options to
-# :py:func:`psyacc.directives.apply_loop_directive` indicating to apply gang
+# :py:func:`psytran.directives.apply_loop_directive` indicating to apply gang
 # and vector clauses. If not, we can pass options indicating to apply a
 # sequential clause.
 #
@@ -100,7 +100,7 @@ def apply_openacc_loops(psy):
 #
 #    Whilst the OpenACC syntax is to use ``seq`` to denote a serial clause,
 #    PSyclone uses the notation ``sequential`` internally. We don't need to
-#    worry about this when using PSyACC, though, as PSyACC follows the OpenACC
+#    worry about this when using PSyTran, though, as PSyTran follows the OpenACC
 #    standard in this case.
 #
 # ::

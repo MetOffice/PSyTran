@@ -1,6 +1,6 @@
 # (C) Crown Copyright 2023, Met Office. All rights reserved.
 #
-# This file is part of PSyACC and is released under the BSD 3-Clause license.
+# This file is part of PSyTran and is released under the BSD 3-Clause license.
 # See LICENSE in the root of the repository for full licensing details.
 
 r"""
@@ -22,7 +22,7 @@ from psyclone.psyir.nodes import (
 )
 from psyclone.psyir.transformations import ACCKernelsTrans
 from psyclone.transformations import ACCLoopTrans, OMPLoopTrans
-from psyacc.loop import _check_loop
+from psytran.loop import _check_loop
 
 __all__ = [
     "apply_acc_kernels_directive",

@@ -1,19 +1,19 @@
 # ..
 #    (C) Crown Copyright 2023, Met Office. All rights reserved.
 #
-#    This file is part of PSyACC and is released under the BSD 3-Clause
+#    This file is part of PSyTran and is released under the BSD 3-Clause
 #    license. See LICENSE in the root of the repository for full licensing
 #    details.
 #
 # .. # pylint: disable=C0114
 # .. # pylint: disable=C0116
 #
-# Demo 4: Applying OpenACC ``collapse`` clauses using PSyACC
+# Demo 4: Applying OpenACC ``collapse`` clauses using PSyTran
 # ==========================================================
 #
 # The `previous demo <demo3_loop.py.html>`__ showed how to insert OpenACC
 # ``loop`` directives with ``gang``, ``vector``, and ``seq`` clauses into
-# Fortran code using PSyACC. In this demo, we consider the ``collapse``
+# Fortran code using PSyTran. In this demo, we consider the ``collapse``
 # clause, which can be used to combine loops whose iterations are
 # independent of one another, to increase data throughput.
 #
@@ -43,12 +43,12 @@
 #    :language: bash
 #    :lines: 8-
 #
-# Again, begin by importing from the namespace PSyACC, as well as the ``nodes``
+# Again, begin by importing from the namespace PSyTran, as well as the ``nodes``
 # module of PSyclone. ::
 
 from psyclone.psyir import nodes
 from psyclone.transformations import ACCLoopTrans
-from psyacc import (
+from psytran import (
     apply_acc_kernels_directive,
     apply_loop_directive,
     is_outer_loop,
@@ -58,7 +58,7 @@ from psyacc import (
 # This was done for demonstration purposes; in many cases, it is easier to
 # just write it out at once. In the following ``trans`` script, you will
 # recognise many of the elements from the previous demos. The difference is the
-# collapse option passed to :func:`psyacc.directives.apply_loop_directive`,
+# collapse option passed to :func:`psytran.directives.apply_loop_directive`,
 # which accepts integer values as well as bools. This is the number of loops
 # within the nest that should be collapsed together, starting from the loop
 # that it is being applied to. ::
@@ -99,9 +99,9 @@ def trans(psy):
 #    ``double_loop.F90``. What happens when we do that in this case?
 #
 # 3. What happens when the collapse option is removed from the call to
-#    :func:`psyacc.directives.apply_loop_directive` in the transformation
+#    :func:`psytran.directives.apply_loop_directive` in the transformation
 #    script? Is the output the same? Convince yourself that everything is
-#    working as expected by reading the `API documentation <../psyacc.html>`__.
+#    working as expected by reading the `API documentation <../psytran.html>`__.
 #
 # This demo can also be viewed as a `Python script <demo4_collapse.py>`__.
 #

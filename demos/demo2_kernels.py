@@ -1,7 +1,7 @@
 # ..
 #    (C) Crown Copyright 2023, Met Office. All rights reserved.
 #
-#    This file is part of PSyACC and is released under the BSD 3-Clause
+#    This file is part of PSyTran and is released under the BSD 3-Clause
 #    license. See LICENSE in the root of the repository for full licensing
 #    details.
 #
@@ -9,13 +9,13 @@
 # .. # pylint: disable=C0116
 #
 #
-# Demo 2: Inserting OpenACC ``kernels`` directives using PSyACC
+# Demo 2: Inserting OpenACC ``kernels`` directives using PSyTran
 # =============================================================
 #
 # The `previous demo <demo1_psyclone.py.html>`__ showed how to run PSyclone in
 # code transformation mode from the command line, albeit with a trivial
 # transformation function. Here, we use a more interesting transformation
-# function, which makes use of PSyACC.
+# function, which makes use of PSyTran.
 #
 # We also consider a slightly more interesting snippet of Fortran source, as
 # given in ``fortran/single_loop.py``:
@@ -33,11 +33,11 @@
 #    :language: bash
 #    :lines: 8-
 #
-# We begin by importing from the namespace PSyACC, as well as the ``nodes``
+# We begin by importing from the namespace PSyTran, as well as the ``nodes``
 # module of PSyclone. ::
 
 from psyclone.psyir import nodes
-from psyacc.directives import apply_acc_kernels_directive
+from psytran.directives import apply_acc_kernels_directive
 
 # Recall that the main thing that PSyclone will take from this file is the
 # ``trans`` function. For demonstration purposes, we decompose it into
@@ -72,14 +72,14 @@ def view_schedule(psy, title="Schedule"):
 #                                Reference[name:'i']
 #                            Literal[value:'0.0', Scalar<REAL, UNDEFINED>]
 #
-# Now for the more interesting bit: let's use PSyACC to add some OpenACC
+# Now for the more interesting bit: let's use PSyTran to add some OpenACC
 # syntax. To do this, we need to find the loop within the schedule. This can be
 # achieved using the ``walk`` method of PSyclone's
 # :py:class:`psyclone.psyir.nodes.node.Node` class. Before taking the first
 # loop found, we check that it was the only one.
 #
 # Having found the loop, we can apply an OpenACC ``kernels`` directive to it
-# using PSyACC's :py:func:`psyacc.directives.apply_acc_kernels_directive`. The
+# using PSyTran's :py:func:`psytran.directives.apply_acc_kernels_directive`. The
 # effect of this will be to instruct the NVHPC Fortran compiler to run the
 # loop on the GPU. Since we do not provide any other instructions, the
 # compiler is free to optimise the GPU configuration for the GPU device

@@ -1,10 +1,10 @@
 # (C) Crown Copyright 2023, Met Office. All rights reserved.
 #
-# This file is part of PSyACC and is released under the BSD 3-Clause license.
+# This file is part of PSyTran and is released under the BSD 3-Clause license.
 # See LICENSE in the root of the repository for full licensing details.
 
 """
-Unit tests for PSyACC's `clauses` module.
+Unit tests for PSyTran's `clauses` module.
 """
 
 import pytest
@@ -14,8 +14,11 @@ from psyclone.psyir import nodes
 from psyclone.transformations import ACCLoopTrans
 from utils import get_schedule, has_clause, simple_loop_code
 
-from psyacc.clauses import _prepare_loop_for_clause, has_collapse_clause
-from psyacc.directives import apply_loop_directive, apply_acc_kernels_directive
+from psytran.clauses import _prepare_loop_for_clause, has_collapse_clause
+from psytran.directives import (
+    apply_loop_directive,
+    apply_acc_kernels_directive,
+)
 
 
 imperfectly_nested_triple_loop1 = {

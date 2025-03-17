@@ -1,6 +1,6 @@
 # (C) Crown Copyright 2023, Met Office. All rights reserved.
 #
-# This file is part of PSyACC and is released under the BSD 3-Clause license.
+# This file is part of PSyTran and is released under the BSD 3-Clause license.
 # See LICENSE in the root of the repository for full licensing details.
 
 r"""
@@ -8,12 +8,12 @@ This module implements functions for querying whether :py:class:`Node`\s have
 OpenACC clauses associated with them, as well as for applying such clauses.
 """
 
-from psyacc.directives import (
+from psytran.directives import (
     has_loop_directive,
     _check_directive,
 )
-from psyacc.family import get_ancestors
-from psyacc.loop import _check_loop
+from psytran.family import get_ancestors
+from psytran.loop import _check_loop
 
 __all__ = [
     "has_seq_clause",

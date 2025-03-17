@@ -1,6 +1,6 @@
 # (C) Crown Copyright 2023, Met Office. All rights reserved.
 #
-# This file is part of PSyACC and is released under the BSD 3-Clause license.
+# This file is part of PSyTran and is released under the BSD 3-Clause license.
 # See LICENSE in the root of the repository for full licensing details.
 
 """
@@ -12,7 +12,7 @@ from psyclone.psyir import nodes
 from psyclone.psyir import transformations as trans
 from psyclone.psyir import symbols
 from psyclone.transformations import TransformationError
-from psyacc.family import has_ancestor
+from psytran.family import has_ancestor
 
 __all__ = ["convert_array_notation"]
 

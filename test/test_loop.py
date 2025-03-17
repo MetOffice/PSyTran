@@ -1,10 +1,10 @@
 # (C) Crown Copyright 2023, Met Office. All rights reserved.
 #
-# This file is part of PSyACC and is released under the BSD 3-Clause license.
+# This file is part of PSyTran and is released under the BSD 3-Clause license.
 # See LICENSE in the root of the repository for full licensing details.
 
 """
-Unit tests for PSyACC's `loop` module.
+Unit tests for PSyTran's `loop` module.
 """
 
 import pytest
@@ -13,7 +13,7 @@ from psyclone.psyir import nodes
 from utils import get_schedule, simple_loop_code
 
 import code_snippets as cs
-from psyacc.loop import (
+from psytran.loop import (
     _check_loop,
     is_independent,
     is_outer_loop,

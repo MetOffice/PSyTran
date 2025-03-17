@@ -2,14 +2,14 @@
 build/
 docs/source/demos/
 outputs/
-psyacc.egg-info/
+pstran.egg-info/
 __pycache__/
 .psyclone/
 
 # Specific files
 .coverage
 docs/source/modules.rst
-docs/source/psyacc.rst
+docs/source/psytran.rst
 
 # File extensions
 *.pyc

@@ -1,6 +1,6 @@
 ! (C) Crown Copyright 2023, Met Office. All rights reserved.
 !
-! This file is part of PSyACC and is released under the BSD 3-Clause license.
+! This file is part of PSyTran and is released under the BSD 3-Clause license.
 ! See LICENSE in the root of the repository for full licensing details.
 
 MODULE double_loop_mod
@@ -15,7 +15,7 @@ MODULE double_loop_mod
       INTEGER, INTENT(IN) :: n
       REAL, INTENT(OUT) :: arr(m,n)
       INTEGER :: i, j
-    
+
       DO j = 1, n
         DO i = 1, m
           arr(i,j) = 0.0

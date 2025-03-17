@@ -1,6 +1,6 @@
 # (C) Crown Copyright 2023, Met Office. All rights reserved.
 #
-# This file is part of PSyACC and is released under the BSD 3-Clause license.
+# This file is part of PSyTran and is released under the BSD 3-Clause license.
 # See LICENSE in the root of the repository for full licensing details.
 
 all: install
@@ -16,7 +16,7 @@ install:
 	@echo "Updating pip..."
 	@python3 -m pip install --upgrade pip
 	@echo "Done."
-	@echo "Installing psyacc..."
+	@echo "Installing psytran..."
 	@python3 -m pip install -r requirements.txt
 	@python3 -m pip install -e .
 	@echo "Done."
@@ -25,7 +25,7 @@ install:
 	@echo "Done."
 
 docs: demos
-	@echo "Building PSyACC docs..."
+	@echo "Building PSyTran docs..."
 	@cd docs && make html
 	@echo "Done."
 
@@ -34,29 +34,29 @@ format:
 	@black *.py
 	@black demos/*.py
 	@black docs/source/*.py
-	@black psyacc/*.py
+	@black psytran/*.py
 	@black test/*.py
 	@echo "Done."
 
 codestyle:
 	@echo "Checking codestyle..."
-	@python3 -m pycodestyle psyacc/
+	@python3 -m pycodestyle psytran/
 	@python3 -m pycodestyle test/
 	@echo "PASS"
 
 lint:
 	@echo "Checking lint..."
-	@python3 -m pylint psyacc
+	@python3 -m pylint psytran
 	@echo "PASS"
 
 test:
-	@echo "testing psyacc..."
+	@echo "testing psytran..."
 	@python3 -m pytest -v --durations=20 test
 	@echo "PASS"
 
 coverage:
 	@echo "Generating coverage report..."
-	@python3 -m pytest -v --cov-reset --cov=psyacc --cov-report=html test
+	@python3 -m pytest -v --cov-reset --cov=psytran --cov-report=html test
 	@echo "Done."
 
 demos: setup

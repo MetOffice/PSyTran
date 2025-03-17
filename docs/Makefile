@@ -1,6 +1,6 @@
 # (C) Crown Copyright 2023, Met Office. All rights reserved.
 #
-# This file is part of PSyACC and is released under the BSD 3-Clause license.
+# This file is part of PSyTran and is released under the BSD 3-Clause license.
 # See LICENSE in the root of the repository for full licensing details.
 
 # You can set these variables from the command line, and also from the environment for
@@ -10,7 +10,7 @@ SPHINXAPIDOC	= sphinx-apidoc
 SPHINXBUILD	= sphinx-build
 SOURCEDIR	= source
 BUILDDIR	= build
-PSYACC		= ../psyacc
+PSYTRAN		= ../psytran
 
 # Put it first so that "make" without argument is like "make help".
 help:
@@ -42,7 +42,7 @@ copy_demos:
 # Catch-all target: route all unknown targets to Sphinx using the new "make mode"
 # option.  $(O) is meant as a shortcut for $(SPHINXOPTS).
 %: Makefile copy_demos
-	@$(SPHINXAPIDOC) -o "$(SOURCEDIR)" "$(PSYACC)"
+	@$(SPHINXAPIDOC) -o "$(SOURCEDIR)" "$(PSYTRAN)"
 	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
 
 clean:
@@ -51,4 +51,4 @@ clean:
 	rm -rf $(SOURCEDIR)/_static
 	rm -rf $(SOURCEDIR)/_templates
 	rm -f $(SOURCEDIR)/modules.rst
-	rm -f $(SOURCEDIR)/psyacc.rst
+	rm -f $(SOURCEDIR)/psytran.rst

@@ -1,7 +1,7 @@
 # ..
 #    (C) Crown Copyright 2023, Met Office. All rights reserved.
 #
-#    This file is part of PSyACC and is released under the BSD 3-Clause
+#    This file is part of PSyTran and is released under the BSD 3-Clause
 #    license. See LICENSE in the root of the repository for full licensing
 #    details.
 #
@@ -24,7 +24,7 @@
 # Instead of running the demos as Python scripts, they should be passed as
 # transformation scripts for the ``psyclone`` command. This command will only
 # be available if you have installed PSyclone and have activated the virtual
-# environment you used when installing it (and PSyACC).
+# environment you used when installing it (and PSyTran).
 #
 # The recommended command for this demo is as follows.
 #
@@ -38,7 +38,7 @@
 # ---
 #
 # PSyclone requires an API to be chosen, i.e., the argument following ``-api``.
-# Since PSyACC is designed to use the NEMO API, we should always choose this.
+# Since PSyTran is designed to use the NEMO API, we should always choose this.
 #
 # Source code
 # -----------
@@ -62,7 +62,7 @@
 
 
 def trans(psy):
-    print("Hello, PSyACC World!")
+    print("Hello, PSyTran World!")
     return psy
 
 
@@ -79,7 +79,7 @@ def trans(psy):
 # this argument is dropped then the transformed code will be printed to screen.
 # We pass the location ``outputs/demo1_psyclone-empty.F90`` as a combination of
 # the names of the source file and transformation script. The ``output``
-# subdirectory should have been created when you installed PSyACC.
+# subdirectory should have been created when you installed PSyTran.
 #
 # Inspecting the output file, it should look something like.
 #
@@ -95,7 +95,7 @@ def trans(psy):
 # program.
 #
 # In the `next demo <demo2_kernels.py.html>`__, we'll develop a more
-# interesting transformation script, which uses PSyACC to apply an OpenACC
+# interesting transformation script, which uses PSyTran to apply an OpenACC
 # ``kernels`` directive to a simple loop.
 #
 # This demo can also be viewed as a `Python script <demo1_psyclone.py>`__.
