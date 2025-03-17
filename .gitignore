@@ -2,7 +2,7 @@
 build/
 docs/source/demos/
 outputs/
-pstran.egg-info/
+psytran.egg-info/
 __pycache__/
 .psyclone/
 
