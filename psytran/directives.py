@@ -61,6 +61,8 @@ def apply_acc_kernels_directive(block, options=None):
     """
     if options is not None and not isinstance(options, dict):
         raise TypeError(f"Expected a dict, not '{type(options)}'.")
+    if options is None:
+        options = {}
     ACCKernelsTrans().apply(block, options=options)
 
 
