@@ -31,12 +31,13 @@ jobs:
           cd /home/runner/work
           git clone https://github.com/stfc/PSyclone.git
           cd PSyclone
-          python3 -m pip install -e .[dev]
+          python3 -m pip install -r requirements.txt
+          python3 -m pip install -e .
 
       - name: Install PSyTran
         run: |
           source /home/runner/work/psytran-ci/bin/activate
-          make install
+          make install_dev
           ./set_default_config.sh
 
       - name: Test linting

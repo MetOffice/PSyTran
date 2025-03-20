@@ -17,8 +17,18 @@ install:
 	@python3 -m pip install --upgrade pip
 	@echo "Done."
 	@echo "Installing psytran..."
-	@python3 -m pip install -r requirements.txt
 	@python3 -m pip install -e .
+	@echo "Done."
+	@echo "Setting up pre-commit..."
+	@pre-commit install
+	@echo "Done."
+
+install_dev:
+	@echo "Updating pip..."
+	@python3 -m pip install --upgrade pip
+	@echo "Done."
+	@echo "Installing psytran with dev dependencies..."
+	@python3 -m pip install -e .[dev]
 	@echo "Done."
 	@echo "Setting up pre-commit..."
 	@pre-commit install
