@@ -62,3 +62,4 @@ exclude = '''
 filterwarnings = [
 	"ignore:`np.bool8` is a deprecated alias for `np.bool_`*:DeprecationWarning",
 	"ignore:unable to find git revision*:UserWarning",
+]
