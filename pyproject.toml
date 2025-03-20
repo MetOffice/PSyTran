@@ -1,19 +1,50 @@
-# (C) Crown Copyright 2023, Met Office. All rights reserved.
+# (C) Crown Copyright 2025, Met Office. All rights reserved.
 #
 # This file is part of PSyTran and is released under the BSD 3-Clause license.
 # See LICENSE in the root of the repository for full licensing details.
 
-[tool.black]
-line-length = 79
-include = '\.pyi?$'
-exclude = '''
-/(
-    \.git
-)/
-'''
+[build-system]
+requires = ["setuptools"]
 
-[tool.pytest.ini_options]
-filterwarnings = [
-	"ignore:`np.bool8` is a deprecated alias for `np.bool_`*:DeprecationWarning",
-	"ignore:unable to find git revision*:UserWarning",
+[project]
+name = "psytran"
+version = "0.2"
+authors = [
+  {name = "Joseph G. Wallwork", email = "jw2423@cam.ac.uk"},
+  {name = "Oakley Brunt"},
+  {name = "Joseph J. Abram"},
 ]
+maintainers = [
+  {name = "Joseph G. Wallwork", email = "jw2423@cam.ac.uk"},
+  {name = "Oakley Brunt"},
+]
+description = "PSyTran: Tools for automating OpenACC GPU porting efforts using PSyclone"
+readme = "README.md"
+license = {file = "LICENSE"}
+keywords = ["psyclone", "gpu", "openacc", "openmp"]
+classifiers = [
+	"Development Status :: 4 - Beta",
+	"Programming Language :: Python",
+]
+dependencies = [
+  "dataclasses",
+]
+
+[project.optional-dependencies]
+dev = [
+  "black",
+  "flake8",
+  "parameterized",
+  "pre-commit",
+  "pylint",
+  "pylit",
+  "pytest",
+  "pytest-cov",
+  "sphinx",
+]
+
+[project.urls]
+Repository = "https://github.com/MetOffice/PSyTran"
+
+[tool.setuptools]
+packages = ["psytran"]
