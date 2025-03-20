@@ -1,8 +1,8 @@
 <!--
   (C) Crown Copyright 2023, Met Office. All rights reserved.
 
-  This file is part of OpenACC-examples and is released under the BSD 3-Clause
-  license. See LICENSE in the root of the repository for full licensing details.
+  This file is part of PSyTran and is released under the BSD 3-Clause license.
+  See LICENSE in the root of the repository for full licensing details.
 -->
 
 # PSyTran: tools for automating OpenACC GPU porting efforts using PSyclone
