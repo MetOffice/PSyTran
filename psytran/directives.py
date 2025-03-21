@@ -16,7 +16,6 @@ from psyclone.psyir.nodes import (
     ACCLoopDirective,
     OMPDoDirective,
     OMPLoopDirective,
-    OMPParallelDirective,
     OMPParallelDoDirective,
     OMPTeamsDistributeParallelDoDirective,
     OMPTeamsLoopDirective,
@@ -116,7 +115,7 @@ def apply_loop_directive(loop, directive, options=None):
                 "directive."
             )
     if isinstance(directive, OMPLoopTrans):
-        if has_parallel_directive(loop, OMPParallelDirective):
+        if has_parallel_directive(loop, ACCKernelsDirective):
             raise ValueError(
                 "Cannot apply an OMP loop directive to a kernel with an "
                 "ACC kernels directive."
@@ -136,7 +135,6 @@ def has_loop_directive(loop):
               else ``False``.
     :rtype: :py:class:`bool`
     """
-    print(loop.parent.parent)
     assert isinstance(loop, nodes.Loop)
     if isinstance(
         loop.parent.parent, ACCLoopDirective
