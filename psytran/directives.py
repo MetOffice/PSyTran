@@ -21,18 +21,12 @@ from psyclone.psyir.nodes import (
     OMPTeamsDistributeParallelDoDirective,
     OMPTeamsLoopDirective,
 )
-from psyclone.psyir.transformations import ACCKernelsTrans
-from psyclone.transformations import (
-    ACCLoopTrans,
-    OMPLoopTrans,
-    OMPParallelTrans,
-)
+from psyclone.transformations import ACCLoopTrans, OMPLoopTrans
 from psytran.loop import _check_loop
 
 __all__ = [
-    "apply_acc_kernels_directive",
+    "apply_parallel_directive",
     "has_acc_kernels_directive",
-    "apply_omp_parallel_directive",
     "has_omp_parallel_directive",
     "apply_loop_directive",
     "has_loop_directive",
@@ -55,7 +49,7 @@ def _check_directive(directive):
         )
 
 
-def _apply_directive(block, directive_cls, options=None):
+def apply_parallel_directive(block, directive_cls, options=None):
     """
     Apply an directive to a block of code.
 
@@ -74,34 +68,6 @@ def _apply_directive(block, directive_cls, options=None):
     if not isinstance(options, dict):
         raise TypeError(f"Expected a dict, not '{type(options)}'.")
     directive_cls().apply(block, options=options)
-
-
-def apply_acc_kernels_directive(block, options=None):
-    """
-    Apply an ACC ``kernels`` directive to a block of code.
-
-    :arg block: the block of code to apply the directive to.
-    :type block: :py:class:`list`
-    :kwarg options: a dictionary of clause options.
-    :type options: :py:class:`dict`
-
-    :raises TypeError: if the options argument is not a dictionary.
-    """
-    return _apply_directive(block, ACCKernelsTrans, options=options)
-
-
-def apply_omp_parallel_directive(block, options=None):
-    """
-    Apply an OMP ``parallel`` directive to a block of code.
-
-    :arg block: the block of code to apply the directive to.
-    :type block: :py:class:`list`
-    :kwarg options: a dictionary of clause options.
-    :type options: :py:class:`dict`
-
-    :raises TypeError: if the options argument is not a dictionary.
-    """
-    return _apply_directive(block, OMPParallelTrans, options=options)
 
 
 def _has_directive(node, directive_cls):
