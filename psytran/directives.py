@@ -16,6 +16,7 @@ from psyclone.psyir.nodes import (
     ACCLoopDirective,
     OMPDoDirective,
     OMPLoopDirective,
+    OMPParallelDirective,
     OMPParallelDoDirective,
     OMPTeamsDistributeParallelDoDirective,
     OMPTeamsLoopDirective,
@@ -31,6 +32,8 @@ from psytran.loop import _check_loop
 __all__ = [
     "apply_acc_kernels_directive",
     "has_acc_kernels_directive",
+    "apply_omp_parallel_directive",
+    "has_omp_parallel_directive",
     "apply_loop_directive",
     "has_loop_directive",
 ]
@@ -87,6 +90,20 @@ def apply_acc_kernels_directive(block, options=None):
     return _apply_directive(block, ACCKernelsTrans, options=options)
 
 
+def apply_omp_parallel_directive(block, options=None):
+    """
+    Apply an OMP ``parallel`` directive to a block of code.
+
+    :arg block: the block of code to apply the directive to.
+    :type block: :py:class:`list`
+    :kwarg options: a dictionary of clause options.
+    :type options: :py:class:`dict`
+
+    :raises TypeError: if the options argument is not a dictionary.
+    """
+    return _apply_directive(block, OMPParallelTrans, options=options)
+
+
 def _has_directive(node, directive_cls):
     """
     Determine whether a node is inside a directive of a given type.
@@ -119,18 +136,17 @@ def has_acc_kernels_directive(node):
     return _has_directive(node, ACCKernelsDirective)
 
 
-def apply_omp_parallel_directive(block, options=None):
+def has_omp_parallel_directive(node):
     """
-    Apply an OMP ``parallel`` directive to a block of code.
+    Determine whether a node is inside an OMP ``parallel`` directive.
 
-    :arg block: the block of code to apply the directive to.
-    :type block: :py:class:`list`
-    :kwarg options: a dictionary of clause options.
-    :type options: :py:class:`dict`
+    :arg node: the Node to check.
+    :type node: :py:class:`Node`
 
-    :raises TypeError: if the options argument is not a dictionary.
+    :returns: ``True`` if the Node has a ``kernels`` directive, else ``False``.
+    :rtype: :py:class:`bool`
     """
-    return _apply_directive(block, OMPParallelTrans, options=options)
+    return _has_directive(node, OMPParallelDirective)
 
 
 def apply_loop_directive(loop, directive, options=None):

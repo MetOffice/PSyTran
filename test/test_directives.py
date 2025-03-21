@@ -33,6 +33,7 @@ from psytran.directives import (
     apply_omp_parallel_directive,
     apply_loop_directive,
     has_acc_kernels_directive,
+    has_omp_parallel_directive,
     has_loop_directive,
     _check_directive,
 )
@@ -168,7 +169,7 @@ def test_check_directive_unsupported(directive=None):
         _check_directive(directive)
 
 
-def test_has_no_kernels_directive(fortran_reader):
+def test_has_no_acc_kernels_directive(fortran_reader):
     """
     Test that :func:`has_acc_kernels_directive` correctly identifies no OpenACC
     kernels directives.
@@ -178,7 +179,18 @@ def test_has_no_kernels_directive(fortran_reader):
     assert not has_acc_kernels_directive(loops[0])
 
 
-def test_has_no_kernels_directive_block(fortran_reader):
+# TODO: Use fixture rather than duplicating
+def test_has_no_omp_parallel_directive(fortran_reader):
+    """
+    Test that :func:`has_omp_parallel_directive` correctly identifies no OpenMP parallel
+    directives.
+    """
+    schedule = get_schedule(fortran_reader, cs.loop_with_1_assignment)
+    loops = schedule.walk(nodes.Loop)
+    assert not has_omp_parallel_directive(loops[0])
+
+
+def test_has_no_acc_kernels_directive_block(fortran_reader):
     """
     Test that :func:`has_acc_kernels_directive` correctly identifies no OpenACC
     kernels directives when applied to a block of code.
@@ -186,6 +198,17 @@ def test_has_no_kernels_directive_block(fortran_reader):
     schedule = get_schedule(fortran_reader, cs.loop_with_1_assignment)
     loops = schedule.walk(nodes.Loop)
     assert not has_acc_kernels_directive(loops)
+
+
+# TODO: Use fixture rather than duplicating
+def test_has_no_omp_parallel_directive_block(fortran_reader):
+    """
+    Test that :func:`has_omp_parallel_directive` correctly identifies no OpenMP parallel
+    directives when applied to a block of code.
+    """
+    schedule = get_schedule(fortran_reader, cs.loop_with_1_assignment)
+    loops = schedule.walk(nodes.Loop)
+    assert not has_omp_parallel_directive(loops)
 
 
 def test_force_apply_loop_directive(fortran_reader, directive, omp_directive):
