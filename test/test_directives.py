@@ -39,8 +39,8 @@ from psytran.directives import (
 
 def test_apply_directive_typeerror(fortran_reader, trans_directive):
     """
-    Test that a :class:`TypeError` is raised when an attempt is made to apply directives
-    with options that aren't a :class:`dict`.
+    Test that a :class:`TypeError` is raised when an attempt is made to apply
+    directives with options that aren't a :class:`dict`.
     """
     trans, _ = trans_directive
     schedule = get_schedule(fortran_reader, cs.loop_with_1_assignment)
@@ -64,8 +64,8 @@ def test_apply_directive_schedule_with_intrinsic_call(
     fortran_reader, trans_directive
 ):
     """
-    Test that directives may be correctly applied to a schedule containing a loop with
-    an intrinsic call.
+    Test that directives may be correctly applied to a schedule containing a
+    loop with an intrinsic call.
     """
     trans, directive = trans_directive
     schedule = get_schedule(
@@ -124,8 +124,8 @@ def test_has_no_directive(fortran_reader, trans_directive):
 
 def test_has_no_directive_block(fortran_reader, trans_directive):
     """
-    Test a lack of directives can be correctly identified when applied to a block of
-    code.
+    Test a lack of directives can be correctly identified when applied to a
+    block of code.
     """
     _, directive = trans_directive
     schedule = get_schedule(fortran_reader, cs.loop_with_1_assignment)
