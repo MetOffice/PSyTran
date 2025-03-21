@@ -55,8 +55,8 @@ def apply_parallel_directive(block, directive_cls, options=None):
     :arg block: the block of code to apply the directive to.
     :type block: :py:class:`list`
     :arg directive_cls: the type of directive
-    :type directive_cls: :py:class:`psyclone.psyir.transformations.parallel_loop_trans. \
-        ParallelLoopTrans.__class__`
+    :type directive_cls: :py:class:`psyclone.psyir.transformations.\
+        parallel_loop_trans.ParallelLoopTrans.__class__`
     :kwarg options: a dictionary of clause options.
     :type options: :py:class:`dict`
 
@@ -76,8 +76,8 @@ def has_parallel_directive(node, directive_cls):
     :arg node: the Node to check.
     :type node: :py:class:`Node`
     :arg directive_cls: the type of directive
-    :type directive_cls: :py:class:`psyclone.psyir.transformations.parallel_loop_trans. \
-        ParallelLoopTrans.__class__`
+    :type directive_cls: :py:class:`psyclone.psyir.transformations.\
+        parallel_loop_trans.ParallelLoopTrans.__class__`
 
     :returns: ``True`` if the Node has a ``kernels`` directive, else ``False``.
     :rtype: :py:class:`bool`
