@@ -37,7 +37,8 @@
 # module of PSyclone. ::
 
 from psyclone.psyir import nodes
-from psytran.directives import apply_acc_kernels_directive
+from psyclone.psyir.transformations import ACCKernelsTrans
+from psytran.directives import apply_parallel_directive
 
 # Recall that the main thing that PSyclone will take from this file is the
 # ``trans`` function. For demonstration purposes, we decompose it into
@@ -79,11 +80,12 @@ def view_schedule(psy, title="Schedule"):
 # loop found, we check that it was the only one.
 #
 # Having found the loop, we can apply an OpenACC ``kernels`` directive to it
-# using PSyTran's :py:func:`psytran.directives.apply_acc_kernels_directive`. The
-# effect of this will be to instruct the NVHPC Fortran compiler to run the
-# loop on the GPU. Since we do not provide any other instructions, the
-# compiler is free to optimise the GPU configuration for the GPU device
-# however it sees fit.
+# using PSyTran's :py:func:`psytran.directives.apply_parallel_directive`,
+# passing transformation type
+# :class:`psyclone.psyir.transformations.ACCKernelsTrans`. The effect of
+# this will be to instruct the NVHPC Fortran compiler to run the loop on the
+# GPU. Since we do not provide any other instructions, the compiler is free to
+# optimise the GPU configuration for the GPU device however it sees fit.
 #
 # .. note::
 #
@@ -106,7 +108,7 @@ def apply_openacc_kernels(psy):
     loop = loops[0]
 
     # Insert OpenACC syntax
-    apply_acc_kernels_directive(loop)
+    apply_parallel_directive(loop, ACCKernelsTrans)
 
     # View the modified schedule
     view_schedule(psy, title="Modified schedule")

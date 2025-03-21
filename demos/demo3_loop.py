@@ -36,9 +36,10 @@
 # module of PSyclone. ::
 
 from psyclone.psyir import nodes
+from psyclone.psyir.transformations import ACCKernelsTrans
 from psyclone.transformations import ACCLoopTrans
 from psytran import (
-    apply_acc_kernels_directive,
+    apply_parallel_directive,
     apply_loop_directive,
     is_outer_loop,
 )
@@ -64,7 +65,7 @@ def apply_openacc_kernels(psy):
     outer_loop = outer_loops[0]
 
     # Insert OpenACC syntax
-    apply_acc_kernels_directive(outer_loop)
+    apply_parallel_directive(outer_loop, ACCKernelsTrans)
     return psy
 
 
