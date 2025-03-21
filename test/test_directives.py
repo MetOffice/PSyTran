@@ -13,6 +13,7 @@ from psyclone.psyir import nodes
 from psyclone.psyir.nodes import (
     OMPDoDirective,
     OMPLoopDirective,
+    OMPParallelDirective,
     OMPParallelDoDirective,
     OMPTeamsDistributeParallelDoDirective,
     OMPTeamsLoopDirective,
@@ -29,6 +30,7 @@ import code_snippets as cs
 from psytran.clauses import has_gang_clause, has_seq_clause, has_vector_clause
 from psytran.directives import (
     apply_acc_kernels_directive,
+    apply_omp_parallel_directive,
     apply_loop_directive,
     has_acc_kernels_directive,
     has_loop_directive,
@@ -49,6 +51,20 @@ def test_apply_acc_kernels_directive_typeerror(fortran_reader):
         apply_acc_kernels_directive(loops[0], options=0)
 
 
+# TODO: Use fixture rather than duplicating
+def test_apply_omp_parallel_directive_typeerror(fortran_reader):
+    """
+    Test that a :class:`TypeError` is raised when
+    :func:`apply_omp_parallel_directive` is called with options that aren't a
+    :class:`dict`.
+    """
+    schedule = get_schedule(fortran_reader, cs.loop_with_1_assignment)
+    loops = schedule.walk(nodes.Loop)
+    expected = "Expected a dict, not '<class 'int'>'."
+    with pytest.raises(TypeError, match=expected):
+        apply_omp_parallel_directive(loops[0], options=0)
+
+
 def test_apply_acc_kernels_directive_schedule(fortran_reader):
     """
     Test that :func:`apply_acc_kernels_directive` correctly applies a
@@ -57,6 +73,17 @@ def test_apply_acc_kernels_directive_schedule(fortran_reader):
     schedule = get_schedule(fortran_reader, cs.loop_with_1_assignment)
     apply_acc_kernels_directive(schedule)
     assert isinstance(schedule[0], ACCKernelsDirective)
+
+
+# TODO: Use fixture rather than duplicating
+def test_apply_omp_parallel_directive_schedule(fortran_reader):
+    """
+    Test that :func:`apply_omp_parallel_directive` correctly applies a
+    ``kernels`` directive to a schedule.
+    """
+    schedule = get_schedule(fortran_reader, cs.loop_with_1_assignment)
+    apply_omp_parallel_directive(schedule)
+    assert isinstance(schedule[0], OMPParallelDirective)
 
 
 def test_apply_acc_kernels_directive_schedule_with_intrinsic_call(
@@ -74,6 +101,22 @@ def test_apply_acc_kernels_directive_schedule_with_intrinsic_call(
     assert isinstance(schedule[0], ACCKernelsDirective)
 
 
+# TODO: Use fixture rather than duplicating
+def test_apply_omp_parallel_directive_schedule_with_intrinsic_call(
+    fortran_reader,
+):
+    """
+    Test that :func:`apply_omp_parallel_directive` correctly applies a
+    ``kernels`` directive to a schedule containing a loop with an intrinsic
+    call.
+    """
+    schedule = get_schedule(
+        fortran_reader, cs.loop_with_1_assignment_and_intrinsic_call
+    )
+    apply_omp_parallel_directive(schedule)
+    assert isinstance(schedule[0], OMPParallelDirective)
+
+
 def test_apply_acc_kernels_directive_loop(fortran_reader):
     """
     Test that :func:`apply_acc_kernels_directive` correctly applies a
@@ -85,6 +128,20 @@ def test_apply_acc_kernels_directive_loop(fortran_reader):
     assert isinstance(loops[0].parent.parent, ACCKernelsDirective)
     assert has_acc_kernels_directive(loops[0])
     assert has_acc_kernels_directive(loops)
+
+
+# TODO: Use fixture rather than duplicating
+def test_apply_omp_parallel_directive_loop(fortran_reader):
+    """
+    Test that :func:`apply_omp_parallel_directive` correctly applies a
+    ``kernels`` directives to a loop.
+    """
+    schedule = get_schedule(fortran_reader, cs.loop_with_1_assignment)
+    loops = schedule.walk(nodes.Loop)
+    apply_omp_parallel_directive(loops[0])
+    assert isinstance(loops[0].parent.parent, OMPParallelDirective)
+    # TODO: assert has_omp_parallel_directive(loops[0])
+    # TODO: assert has_omp_parallel_directive(loops)
 
 
 def test_check_directive(directive, omp_directive):

@@ -21,7 +21,11 @@ from psyclone.psyir.nodes import (
     OMPTeamsLoopDirective,
 )
 from psyclone.psyir.transformations import ACCKernelsTrans
-from psyclone.transformations import ACCLoopTrans, OMPLoopTrans
+from psyclone.transformations import (
+    ACCLoopTrans,
+    OMPLoopTrans,
+    OMPParallelTrans,
+)
 from psytran.loop import _check_loop
 
 __all__ = [
@@ -97,6 +101,20 @@ def has_acc_kernels_directive(node):
         return has_acc_kernels_directive(node[0])
     assert isinstance(node, nodes.Node)
     return bool(node.ancestor(ACCKernelsDirective))
+
+
+def apply_omp_parallel_directive(block, options=None):
+    """
+    Apply an OMP ``parallel`` directive to a block of code.
+
+    :arg block: the block of code to apply the directive to.
+    :type block: :py:class:`list`
+    :kwarg options: a dictionary of clause options.
+    :type options: :py:class:`dict`
+
+    :raises TypeError: if the options argument is not a dictionary.
+    """
+    return _apply_directive(block, OMPParallelTrans, options=options)
 
 
 def apply_loop_directive(loop, directive, options=None):
