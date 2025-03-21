@@ -48,6 +48,27 @@ def _check_directive(directive):
         )
 
 
+def _apply_directive(block, directive_cls, options=None):
+    """
+    Apply an directive to a block of code.
+
+    :arg block: the block of code to apply the directive to.
+    :type block: :py:class:`list`
+    :arg directive_cls: the type of directive
+    :type directive_cls: :py:class:`psyclone.psyir.transformations.parallel_loop_trans. \
+        ParallelLoopTrans.__class__`
+    :kwarg options: a dictionary of clause options.
+    :type options: :py:class:`dict`
+
+    :raises TypeError: if the options argument is not a dictionary.
+    """
+    if options is None:
+        options = {}
+    if not isinstance(options, dict):
+        raise TypeError(f"Expected a dict, not '{type(options)}'.")
+    directive_cls().apply(block, options=options)
+
+
 def apply_acc_kernels_directive(block, options=None):
     """
     Apply an ACC ``kernels`` directive to a block of code.
@@ -59,11 +80,7 @@ def apply_acc_kernels_directive(block, options=None):
 
     :raises TypeError: if the options argument is not a dictionary.
     """
-    if options is None:
-        options = {}
-    if not isinstance(options, dict):
-        raise TypeError(f"Expected a dict, not '{type(options)}'.")
-    ACCKernelsTrans().apply(block, options=options)
+    return _apply_directive(block, ACCKernelsTrans, options=options)
 
 
 def has_acc_kernels_directive(node):
