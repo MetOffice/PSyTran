@@ -13,7 +13,6 @@ from psyclone.psyir import nodes
 from psyclone.psyir.nodes import (
     OMPDoDirective,
     OMPLoopDirective,
-    OMPParallelDirective,
     OMPParallelDoDirective,
     OMPTeamsDistributeParallelDoDirective,
     OMPTeamsLoopDirective,
@@ -24,7 +23,6 @@ from psyclone.transformations import (
     ACCLoopDirective,
     ACCLoopTrans,
     OMPLoopTrans,
-    OMPParallelTrans,
 )
 from utils import get_schedule, has_clause
 
@@ -33,8 +31,7 @@ from psytran.clauses import has_gang_clause, has_seq_clause, has_vector_clause
 from psytran.directives import (
     apply_parallel_directive,
     apply_loop_directive,
-    has_acc_kernels_directive,
-    has_omp_parallel_directive,
+    has_parallel_directive,
     has_loop_directive,
     _check_directive,
 )
@@ -87,13 +84,8 @@ def test_apply_directive_loop(fortran_reader, trans_directive):
     loops = schedule.walk(nodes.Loop)
     apply_parallel_directive(loops[0], trans)
     assert isinstance(loops[0].parent.parent, directive)
-    # TODO: Avoid conditional
-    if isinstance(directive, ACCKernelsTrans):
-        assert has_acc_kernels_directive(loops[0])
-        assert has_acc_kernels_directive(loops)
-    elif isinstance(directive, OMPParallelTrans):
-        assert has_omp_parallel_directive(loops[0])
-        assert has_omp_parallel_directive(loops)
+    assert has_parallel_directive(loops[0], directive)
+    assert has_parallel_directive(loops, directive)
 
 
 def test_check_directive(loop_trans, omp_directive):
@@ -127,11 +119,7 @@ def test_has_no_directive(fortran_reader, trans_directive):
     _, directive = trans_directive
     schedule = get_schedule(fortran_reader, cs.loop_with_1_assignment)
     loops = schedule.walk(nodes.Loop)
-    # TODO: Update to avoid conditional
-    if isinstance(directive, ACCKernelsDirective):
-        assert not has_acc_kernels_directive(loops[0])
-    elif isinstance(directive, OMPParallelDirective):
-        assert not has_omp_parallel_directive(loops[0])
+    assert not has_parallel_directive(loops[0], directive)
 
 
 def test_has_no_directive_block(fortran_reader, trans_directive):
@@ -142,11 +130,7 @@ def test_has_no_directive_block(fortran_reader, trans_directive):
     _, directive = trans_directive
     schedule = get_schedule(fortran_reader, cs.loop_with_1_assignment)
     loops = schedule.walk(nodes.Loop)
-    # TODO: Update to avoid conditional
-    if isinstance(directive, ACCKernelsDirective):
-        assert not has_acc_kernels_directive(loops)
-    elif isinstance(directive, OMPParallelDirective):
-        assert not has_omp_parallel_directive(loops)
+    assert not has_parallel_directive(loops, directive)
 
 
 def test_force_apply_loop_directive(fortran_reader, loop_trans, omp_directive):

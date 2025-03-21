@@ -26,8 +26,7 @@ from psytran.loop import _check_loop
 
 __all__ = [
     "apply_parallel_directive",
-    "has_acc_kernels_directive",
-    "has_omp_parallel_directive",
+    "has_parallel_directive",
     "apply_loop_directive",
     "has_loop_directive",
 ]
@@ -70,9 +69,9 @@ def apply_parallel_directive(block, directive_cls, options=None):
     directive_cls().apply(block, options=options)
 
 
-def _has_directive(node, directive_cls):
+def has_parallel_directive(node, directive_cls):
     """
-    Determine whether a node is inside a directive of a given type.
+    Determine whether a node is inside a parallel directive of a given type.
 
     :arg node: the Node to check.
     :type node: :py:class:`Node`
@@ -84,35 +83,9 @@ def _has_directive(node, directive_cls):
     :rtype: :py:class:`bool`
     """
     if isinstance(node, Iterable):
-        return _has_directive(node[0], directive_cls)
+        return has_parallel_directive(node[0], directive_cls)
     assert isinstance(node, nodes.Node)
     return bool(node.ancestor(directive_cls))
-
-
-def has_acc_kernels_directive(node):
-    """
-    Determine whether a node is inside an ACC ``kernels`` directive.
-
-    :arg node: the Node to check.
-    :type node: :py:class:`Node`
-
-    :returns: ``True`` if the Node has a ``kernels`` directive, else ``False``.
-    :rtype: :py:class:`bool`
-    """
-    return _has_directive(node, ACCKernelsDirective)
-
-
-def has_omp_parallel_directive(node):
-    """
-    Determine whether a node is inside an OMP ``parallel`` directive.
-
-    :arg node: the Node to check.
-    :type node: :py:class:`Node`
-
-    :returns: ``True`` if the Node has a ``kernels`` directive, else ``False``.
-    :rtype: :py:class:`bool`
-    """
-    return _has_directive(node, OMPParallelDirective)
 
 
 def apply_loop_directive(loop, directive, options=None):
@@ -137,13 +110,13 @@ def apply_loop_directive(loop, directive, options=None):
     _check_loop(loop)
 
     if isinstance(directive, ACCLoopTrans):
-        if not has_acc_kernels_directive(loop):
+        if not has_parallel_directive(loop, ACCKernelsDirective):
             raise ValueError(
                 "Cannot apply an ACC loop directive without a kernels "
                 "directive."
             )
     if isinstance(directive, OMPLoopTrans):
-        if has_acc_kernels_directive(loop):
+        if has_parallel_directive(loop, OMPParallelDirective):
             raise ValueError(
                 "Cannot apply an OMP loop directive to a kernel with an "
                 "ACC kernels directive."
@@ -167,7 +140,7 @@ def has_loop_directive(loop):
     assert isinstance(loop, nodes.Loop)
     if isinstance(
         loop.parent.parent, ACCLoopDirective
-    ) and has_acc_kernels_directive(loop):
+    ) and has_parallel_directive(loop, ACCKernelsDirective):
         return True
     if isinstance(
         loop.parent.parent,
