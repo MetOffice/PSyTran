@@ -87,6 +87,25 @@ def apply_acc_kernels_directive(block, options=None):
     return _apply_directive(block, ACCKernelsTrans, options=options)
 
 
+def _has_directive(node, directive_cls):
+    """
+    Determine whether a node is inside a directive of a given type.
+
+    :arg node: the Node to check.
+    :type node: :py:class:`Node`
+    :arg directive_cls: the type of directive
+    :type directive_cls: :py:class:`psyclone.psyir.transformations.parallel_loop_trans. \
+        ParallelLoopTrans.__class__`
+
+    :returns: ``True`` if the Node has a ``kernels`` directive, else ``False``.
+    :rtype: :py:class:`bool`
+    """
+    if isinstance(node, Iterable):
+        return _has_directive(node[0], directive_cls)
+    assert isinstance(node, nodes.Node)
+    return bool(node.ancestor(directive_cls))
+
+
 def has_acc_kernels_directive(node):
     """
     Determine whether a node is inside an ACC ``kernels`` directive.
@@ -97,10 +116,7 @@ def has_acc_kernels_directive(node):
     :returns: ``True`` if the Node has a ``kernels`` directive, else ``False``.
     :rtype: :py:class:`bool`
     """
-    if isinstance(node, Iterable):
-        return has_acc_kernels_directive(node[0])
-    assert isinstance(node, nodes.Node)
-    return bool(node.ancestor(ACCKernelsDirective))
+    return _has_directive(node, ACCKernelsDirective)
 
 
 def apply_omp_parallel_directive(block, options=None):
