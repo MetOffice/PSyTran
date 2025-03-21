@@ -185,7 +185,6 @@ def test_force_apply_loop_directive_with_seq_clause(
         )
         assert isinstance(loops[0].parent.parent, ACCLoopDirective)
         assert has_seq_clause(loops[0])
-    # TODO: OMP case
 
 
 def test_apply_loop_directive_with_clause(
@@ -203,7 +202,6 @@ def test_apply_loop_directive_with_clause(
         apply_loop_directive(loops[0], loop_trans, options={clause: True})
         assert isinstance(loops[0].parent.parent, ACCLoopDirective)
         assert has_clause[clause](loops[0])
-    # TODO: OMP case
 
 
 def test_apply_loop_directive_with_gang_vector(
@@ -224,7 +222,6 @@ def test_apply_loop_directive_with_gang_vector(
         assert isinstance(loops[0].parent.parent, ACCLoopDirective)
         assert has_gang_clause(loops[0])
         assert has_vector_clause(loops[0])
-    # TODO: OMP case
 
 
 def test_apply_loop_directive_typeerror1(fortran_reader, loop_trans):
