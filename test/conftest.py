@@ -10,15 +10,26 @@ import pytest
 
 # pylint: disable=W0611
 from psyclone.tests.conftest import fixture_fortran_reader
+from psyclone.psyir.nodes import ACCKernelsDirective, OMPParallelDirective
 from psyclone.transformations import ACCLoopTrans, OMPLoopTrans
 
 # pylint: enable=W0611
 
 
 @pytest.fixture(
-    name="directive", params=[ACCLoopTrans, OMPLoopTrans], scope="module"
+    name="directive",
+    params=[ACCKernelsDirective, OMPParallelDirective],
+    scope="module",
 )
 def fixture_directive(request):
+    """Pytest fixture for directives."""
+    return request.param()
+
+
+@pytest.fixture(
+    name="loop_trans", params=[ACCLoopTrans, OMPLoopTrans], scope="module"
+)
+def fixture_loop_trans(request):
     """Pytest fixture for loop transformations."""
     return request.param()
 
