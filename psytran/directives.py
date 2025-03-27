@@ -78,7 +78,7 @@ def has_parallel_directive(node, directive_cls):
     :type directive_cls: :py:class:`psyclone.psyir.transformations.\
         parallel_loop_trans.ParallelLoopTrans.__class__`
 
-    :returns: ``True`` if the Node has a ``kernels`` directive, else ``False``.
+    :returns: ``True`` if the Node has a parallel directive, else ``False``.
     :rtype: :py:class:`bool`
     """
     if isinstance(node, Iterable):
