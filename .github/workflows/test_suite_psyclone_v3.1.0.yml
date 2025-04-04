@@ -30,7 +30,7 @@ jobs:
         run: |
           source /home/runner/work/psytran-ci/bin/activate
           cd /home/runner/work
-          git clone https://github.com/stfc/PSyclone.git --single-branch v3.1.0
+          git clone -b v3.1.0 --single-branch https://github.com/stfc/PSyclone.git PSyclone
           cd PSyclone
           python3 -m pip install -r requirements.txt
           python3 -m pip install -e .
