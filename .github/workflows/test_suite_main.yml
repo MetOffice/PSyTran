@@ -3,6 +3,7 @@ name: Test suite
 on:
   # Trigger the workflow on certain events
   pull_request:
+    branches: [main]
 
   # Enable manual triggering from the Actions tab
   workflow_dispatch:
@@ -13,23 +14,17 @@ on:
 
 jobs:
 
-  setup-venv:
+  test-suite:
 
     runs-on: ubuntu-latest
 
     steps:
+      - uses: actions/checkout@v2
+
       - name: Setup virtual environment
         run: |
           cd /home/runner/work
           python3 -m venv psytran-ci
-
-  install-psyclone-head:
-
-    runs-on: ubuntu-latest
-
-    if: github.ref == 'refs/heads/main'
-    steps:
-      - uses: actions/checkout@v2
 
       - name: Install PSyclone
         run: |
@@ -40,28 +35,6 @@ jobs:
           python3 -m pip install -r requirements.txt
           python3 -m pip install -e .
 
-  install-psyclone-3-1-0:
-
-    runs-on: ubuntu-latest
-
-    if: github.ref == 'refs/heads/psyclone-3.1.0'
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Install PSyclone
-        run: |
-          source /home/runner/work/psytran-ci/bin/activate
-          cd /home/runner/work
-          git clone https://github.com/stfc/PSyclone.git --single-branch v3.1.0
-          cd PSyclone
-          python3 -m pip install -r requirements.txt
-          python3 -m pip install -e .
-
-  test-suite:
-
-    runs-on: ubuntu-latest
-
-    steps:
       - name: Install PSyTran
         run: |
           source /home/runner/work/psytran-ci/bin/activate
