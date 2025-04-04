@@ -5,7 +5,7 @@ on:
   pull_request:
   push:
     branches:
-      -psyclone-3.1.0
+      - "psyclone-3.1.0"
 
   # Enable manual triggering from the Actions tab
   workflow_dispatch:

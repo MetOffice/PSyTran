@@ -5,7 +5,7 @@ on:
   pull_request:
   push:
     branches:
-      - main
+      - "main"
 
   # Enable manual triggering from the Actions tab
   workflow_dispatch:
