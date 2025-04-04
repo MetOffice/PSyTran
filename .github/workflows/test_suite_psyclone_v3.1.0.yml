@@ -3,6 +3,7 @@ name: Test suite
 on:
   # Trigger the workflow on certain events
   pull_request_target:
+    branches:
       - psyclone-3.1.0
 
   # Enable manual triggering from the Actions tab
