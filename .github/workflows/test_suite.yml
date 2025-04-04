@@ -35,7 +35,7 @@ jobs:
           python3 -m pip install -r requirements.txt
           python3 -m pip install -e .
 
-  install-psyclone-3.1.0:
+  install-psyclone-3-1-0:
 
     runs-on: ubuntu-latest
 
