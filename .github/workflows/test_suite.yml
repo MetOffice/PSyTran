@@ -13,11 +13,11 @@ on:
 
 jobs:
 
-  test_suite:
+  install-psyclone-head:
 
     runs-on: ubuntu-latest
 
-    if: github.ref == 'refs/heads/psyclone-3.1.0'
+    if: github.ref == 'refs/heads/main'
     steps:
       - uses: actions/checkout@v2
 
@@ -35,38 +35,9 @@ jobs:
           python3 -m pip install -r requirements.txt
           python3 -m pip install -e .
 
-      - name: Install PSyTran
-        run: |
-          source /home/runner/work/psytran-ci/bin/activate
-          make install_dev
-          ./set_default_config.sh
+  install-psyclone-3.1.0:
 
-      - name: Test linting
-        run: |
-          source /home/runner/work/psytran-ci/bin/activate
-          make lint
-
-      - name: Test codestyle
-        run: |
-          source /home/runner/work/psytran-ci/bin/activate
-          make codestyle
-
-      - name: PSyTran unit tests
-        run: |
-          source /home/runner/work/psytran-ci/bin/activate
-          python3 -m pytest -v --cov-reset --cov=psytran -v test
-
-      - name: PSyTran integration tests
-        run: |
-          source /home/runner/work/psytran-ci/bin/activate
-          cd demos
-          make run
-          make clean
-
-      - name: Build docs
-        run: |
-          source /home/runner/work/psytran-ci/bin/activate
-          make docs
+    runs-on: ubuntu-latest
 
     if: github.ref == 'refs/heads/psyclone-3.1.0'
     steps:
@@ -86,6 +57,11 @@ jobs:
           python3 -m pip install -r requirements.txt
           python3 -m pip install -e .
 
+  test-suite:
+
+    runs-on: ubuntu-latest
+
+    steps:
       - name: Install PSyTran
         run: |
           source /home/runner/work/psytran-ci/bin/activate
