@@ -13,6 +13,16 @@ on:
 
 jobs:
 
+  setup-venv:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Setup virtual environment
+        run: |
+          cd /home/runner/work
+          python3 -m venv psytran-ci
+
   install-psyclone-head:
 
     runs-on: ubuntu-latest
@@ -20,11 +30,6 @@ jobs:
     if: github.ref == 'refs/heads/main'
     steps:
       - uses: actions/checkout@v2
-
-      - name: Setup virtual environment
-        run: |
-          cd /home/runner/work
-          python3 -m venv psytran-ci
 
       - name: Install PSyclone
         run: |
@@ -42,11 +47,6 @@ jobs:
     if: github.ref == 'refs/heads/psyclone-3.1.0'
     steps:
       - uses: actions/checkout@v2
-
-      - name: Setup virtual environment
-        run: |
-          cd /home/runner/work
-          python3 -m venv psytran-ci
 
       - name: Install PSyclone
         run: |
