@@ -26,11 +26,11 @@ jobs:
           cd /home/runner/work
           python3 -m venv psytran-ci
 
-      - name: Install PSyclone
+      - name: Install PSyclone v3.1.0
         run: |
           source /home/runner/work/psytran-ci/bin/activate
           cd /home/runner/work
-          git clone https://github.com/stfc/PSyclone.git
+          git clone https://github.com/stfc/PSyclone.git -single-branch v3.1.0
           cd PSyclone
           python3 -m pip install -r requirements.txt
           python3 -m pip install -e .
