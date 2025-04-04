@@ -3,6 +3,8 @@ name: Test suite
 on:
   # Trigger the workflow on certain events
   pull_request:
+    branches:
+      - "main"
   push:
     branches:
       - "main"
