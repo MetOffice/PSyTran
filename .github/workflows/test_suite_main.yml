@@ -2,8 +2,9 @@ name: Test suite
 
 on:
   # Trigger the workflow on certain events
-  pull_request_target:
-    push:
+  pull_request:
+  push:
+    branches:
       - main
 
   # Enable manual triggering from the Actions tab
