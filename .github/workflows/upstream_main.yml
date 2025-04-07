@@ -10,11 +10,11 @@ on:
 jobs:
 
   open_pr:
-
-
+    runs-on: ubuntu-latest
+    steps:
+    - uses: peter-evans/create-pull-request@v7.0.8
     - name: Create Pull Request
       if: ${{ github.event.pull_request.merged }}
-      uses: peter-evans/create-pull-request@v7.0.8
       with:
         commit-message: Merge changes from ${{ github.event.pull_request.head_ref }}
         title: ${{ github.event.pull_request.title }} - merge to main
