@@ -1,0 +1,69 @@
+name: Test suite
+
+on:
+  # Trigger the workflow on certain events
+  pull_request:
+    branches:
+      - "psyclone-3.1.0"
+  push:
+    branches:
+      - "psyclone-3.1.0"
+
+  # Enable manual triggering from the Actions tab
+  workflow_dispatch:
+
+jobs:
+
+  test_suite:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup virtual environment
+        run: |
+          cd /home/runner/work
+          python3 -m venv psytran-ci
+
+      - name: Install PSyclone v3.1.0
+        run: |
+          source /home/runner/work/psytran-ci/bin/activate
+          cd /home/runner/work
+          git clone -b v3.1.0 --single-branch https://github.com/stfc/PSyclone.git PSyclone
+          cd PSyclone
+          python3 -m pip install -r requirements.txt
+          python3 -m pip install -e .
+
+      - name: Install PSyTran
+        run: |
+          source /home/runner/work/psytran-ci/bin/activate
+          make install_dev
+          ./set_default_config.sh
+
+      - name: Test linting
+        run: |
+          source /home/runner/work/psytran-ci/bin/activate
+          make lint
+
+      - name: Test codestyle
+        run: |
+          source /home/runner/work/psytran-ci/bin/activate
+          make codestyle
+
+      - name: PSyTran unit tests
+        run: |
+          source /home/runner/work/psytran-ci/bin/activate
+          python3 -m pytest -v --cov-reset --cov=psytran -v test
+
+      - name: PSyTran integration tests
+        run: |
+          source /home/runner/work/psytran-ci/bin/activate
+          cd demos
+          make run
+          make clean
+
+      - name: Build docs
+        run: |
+          source /home/runner/work/psytran-ci/bin/activate
+          make docs
