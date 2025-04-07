@@ -4,18 +4,13 @@ on:
   # Trigger the workflow on certain events
   pull_request:
     branches:
-      - "main"
-
+      - "psyclone-3.1.0"
   push:
     branches:
-      - "main"
+      - "psyclone-3.1.0"
 
   # Enable manual triggering from the Actions tab
   workflow_dispatch:
-
-  # Trigger the workflow every Saturday at 17:00 UTC
-  schedule:
-    - cron: "0 17 * * 6"
 
 jobs:
 
@@ -31,11 +26,11 @@ jobs:
           cd /home/runner/work
           python3 -m venv psytran-ci
 
-      - name: Install PSyclone
+      - name: Install PSyclone v3.1.0
         run: |
           source /home/runner/work/psytran-ci/bin/activate
           cd /home/runner/work
-          git clone https://github.com/stfc/PSyclone.git
+          git clone -b v3.1.0 --single-branch https://github.com/stfc/PSyclone.git PSyclone
           cd PSyclone
           python3 -m pip install -r requirements.txt
           python3 -m pip install -e .
