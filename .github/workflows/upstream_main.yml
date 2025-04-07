@@ -8,13 +8,15 @@ on:
     types: [closed]
 
 jobs:
-  open-pull_request:
-    if: ${{ github.event.pull_request.merged }}
-    uses: peter-evans/create-pull-request@v4
-    with:
-    commit-message: Merge changes from
-    title: ${{ github.event.pull_request.title }} - merge to main
-    base: main
-    labels: automated-pr
-    branch: "psyclone-3.1.0"
-    delete-branch: false
+  open-pr:
+      if: ${{ github.event.pull_request.merged }}
+
+    - name: Create Pull Request
+      uses: peter-evans/create-pull-request@v7.0.8
+      with:
+      commit-message: Merge changes from ${{ github.event.pull_request.head_ref }}
+      title: ${{ github.event.pull_request.title }} - merge to main
+      base: main
+      labels: automated-pr
+      branch: "psyclone-3.1.0"
+      delete-branch: false
