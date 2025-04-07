@@ -1,0 +1,20 @@
+name: Upstream to main
+
+on:
+  # Trigger the workflow on certain events
+  pull_request:
+    branches:
+      - "psyclone-3.1.0"
+    types: [closed]
+
+jobs:
+  open-pull_request:
+    if: ${{ github.event.pull_request.merged }}
+    uses: peter-evans/create-pull-request@v4
+    with:
+    commit-message: Merge changes from
+    title: ${{ github.event.pull_request.title }} - merge to main
+    base: main
+    labels: automated-pr
+    branch: "psyclone-3.1.0"
+    delete-branch: false

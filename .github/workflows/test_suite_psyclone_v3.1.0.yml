@@ -12,10 +12,6 @@ on:
   # Enable manual triggering from the Actions tab
   workflow_dispatch:
 
-  # Trigger the workflow every Saturday at 17:00 UTC
-  schedule:
-    - cron: "0 17 * * 6"
-
 jobs:
 
   test_suite:
