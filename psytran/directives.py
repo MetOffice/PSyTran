@@ -63,7 +63,6 @@ def apply_parallel_directive(block, directive_cls, options=None):
     """
     if options is None:
         options = {}
-    print("hello")
     if not isinstance(options, dict):
         raise TypeError(f"Expected a dict, not '{type(options)}'.")
     directive_cls().apply(block, options=options)
