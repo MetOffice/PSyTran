@@ -17,10 +17,7 @@ install:
 	@python3 -m pip install --upgrade pip
 	@echo "Done."
 	@echo "Installing psytran..."
-	@python3 -m pip install -e .
-	@echo "Done."
-	@echo "Setting up pre-commit..."
-	@pre-commit install
+	@python3 -m pip install .
 	@echo "Done."
 
 install_dev:
