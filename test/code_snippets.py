@@ -437,6 +437,30 @@ dependent_triple_subloop = """
     END PROGRAM test
     """
 
+perfect_nested_loop_siblings = """
+    PROGRAM test
+      REAL :: a(10,10)
+      INTEGER :: i
+      INTEGER :: j
+      INTEGER :: k
+      INTEGER :: l
+      INTEGER :: m
+
+      DO i = 1, 10
+        DO j = 1, 10
+          DO k = 1, 10
+            a(i,j,k) = 0
+          END DO
+        END DO
+        DO l = 1, 10
+          DO m = 1, 10
+            a(i,l,m) = 0
+          END DO
+        END DO
+      END DO
+    END PROGRAM test
+    """
+
 array_assignment_1d = """
     PROGRAM test
       REAL :: a(10)

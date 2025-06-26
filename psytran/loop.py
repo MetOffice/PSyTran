@@ -216,3 +216,33 @@ def is_parallelisable(loop):
     :rtype: :py:class:`bool`
     """
     return loop.independent_iterations()
+
+
+def get_perfectly_nested_loops(schedule):
+    """
+    Finds the topmost level of all perfectly nested loop structures within a
+    specified schedule and retruns them as a list.
+
+    :arg schedule: the schedule to search.
+    :type schedule: :py:class:`Schedule`
+
+    :returns loops: all loops that are the topmost of a perfectly nested
+                    structure.
+    :rtype loops: list[:py:class:`Loop`]
+    """
+    perfectly_nested_loops = []
+
+    # Test all loops in schedule to see if they are perfectly nested
+    for loop in  schedule.walk(nodes.Loop):
+        if is_perfectly_nested(loop):
+            perfectly_nested_loops.append(loop)
+
+    # Check all loops that are perfectly nested to see if they are a descendent
+    # of another perfectly nested loop and remove them if they are
+    for top_loop in perfectly_nested_loops:
+        for bottom_loop in reversed(perfectly_nested_loops):
+            if bottom_loop in get_descendents(top_loop):
+                perfectly_nested_loops.remove(bottom_loop)
+
+    # return list of perfectly nested loops
+    return perfectly_nested_loops
