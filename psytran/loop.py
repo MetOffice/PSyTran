@@ -218,16 +218,19 @@ def is_parallelisable(loop):
     return loop.independent_iterations()
 
 
-def get_perfectly_nested_outer_loops(schedule):
+def get_perfectly_nested_loops(schedule):
     """
     Finds the outermost of all perfectly nested loop structures within a
     supplied schedule and returns them as a list.
 
+    Does NOT nexcessarily return an outer loop, only the topmost loop of a
+    perfectly nested structure.
+
     :arg schedule: the schedule to search.
     :type schedule: :py:class:`Schedule`
 
-    :returns loops: all loops that are the outermost of
-                                           a perfectly nested structure.
+    :returns loops: all loops that are the outermost of a perfectly nested
+                    structure.
     :rtype loops: list[:py:class:`Loop`]
     """
     loops = []

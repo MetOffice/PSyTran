@@ -20,7 +20,7 @@ from psytran.loop import (
     is_parallelisable,
     is_perfectly_nested,
     is_simple_loop,
-    get_perfectly_nested_outer_loops,
+    get_perfectly_nested_loops,
 )
 
 perfectly_nested_loop = {
@@ -266,8 +266,8 @@ def test_get_perfectly_nested_sibling_loops(fortran_reader):
     nested looping structures even when they are siblings.
     """
     schedule = get_schedule(fortran_reader, cs.perfect_nested_loop_siblings)
-    loops = get_perfectly_nested_outer_loops(schedule)
-    assert len(loops) == 2
+    loops = get_perfectly_nested_loops(schedule)
+    assert len(loops) == 0
     assert loops[0].variable.name == "j"
     assert loops[1].variable.name == "l"
 
@@ -281,7 +281,7 @@ def test_get_perfectly_nested_loop_top_level(fortran_reader):
     schedule = get_schedule(
         fortran_reader, cs.quadruple_loop_with_1_assignment
     )
-    loops = get_perfectly_nested_outer_loops(schedule)
+    loops = get_perfectly_nested_loops(schedule)
 
     # there are four loops in the nest but we only want to return the top level
     assert len(loops) == 1
