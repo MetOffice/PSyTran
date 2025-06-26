@@ -226,23 +226,23 @@ def get_perfectly_nested_outer_loops(schedule):
     :arg schedule: the schedule to search.
     :type schedule: :py:class:`Schedule`
 
-    :returns loops: all loops that are the outermost of a perfectly nested
-                    structure.
+    :returns loops: all loops that are the outermost of
+                                           a perfectly nested structure.
     :rtype loops: list[:py:class:`Loop`]
     """
-    perfectly_nested_outer_loops = []
+    loops = []
 
     # Test all loops in schedule to see if they are perfectly nested
     for loop in schedule.walk(nodes.Loop):
         if is_perfectly_nested(loop):
-            perfectly_nested_outer_loops.append(loop)
+            loops.append(loop)
 
     # For each loop in the list check if loops below it are a descendent and
     # remove them if they are
-    for top_loop in perfectly_nested_outer_loops[:]:
-        for bottom_loop in reversed(perfectly_nested_outer_loops[:]):
+    for top_loop in loops[:]:
+        for bottom_loop in reversed(loops[:]):
             if bottom_loop in get_descendents(top_loop):
-                perfectly_nested_outer_loops.remove(bottom_loop)
+                loops.remove(bottom_loop)
 
     # return list of perfectly nested loops
-    return perfectly_nested_outer_loops
+    return loops
