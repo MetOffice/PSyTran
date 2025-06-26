@@ -265,11 +265,12 @@ def test_get_perfectly_nested_sibling_loops(fortran_reader):
     Test that :func:`get_perfectly_nested_loops` correctly identifies perfectly
     nested looping structures even when they are siblings.
     """
-    schedule = get_schedule(fortran_reader, cs.perfect_nested_loop_siblings)
+    schedule = get_schedule(fortran_reader, cs.double_loop_with_2_loops)
     loops = get_perfectly_nested_loops(schedule)
-    assert len(loops) == 0
-    assert loops[0].variable.name == "j"
-    assert loops[1].variable.name == "l"
+    assert len(loops) == 2
+    assert loops[0].variable.name == "i"
+    assert loops[1].variable.name == "i"
+    assert loops[0] is not loops[1]
 
 
 def test_get_perfectly_nested_loop_top_level(fortran_reader):
@@ -283,7 +284,25 @@ def test_get_perfectly_nested_loop_top_level(fortran_reader):
     )
     loops = get_perfectly_nested_loops(schedule)
 
-    # there are four loops in the nest but we only want to return the top level
+    # There are four loops in the nest but we only want to return the top level
     assert len(loops) == 1
-    # top level loop uses 'l' as variable
-    assert loops[0].variable.name == "l"
+    # In this case, this should return an outer loop
+    assert is_outer_loop(loops[0])
+
+
+def test_get_perfectly_nested_loop_with_conditional(fortran_reader):
+    """
+    Test that :func:`get_perfectly_nested_loops` correctly returns only the top
+    or outermost loop for a nest of loops where each qualifies as 'perfectly
+    nested'.
+    """
+    schedule = get_schedule(
+        fortran_reader, cs.conditional_imperfectly_nested_triple_loop1
+    )
+    loops = get_perfectly_nested_loops(schedule)
+
+    # There are four loops in the nest but we only want to return the top level
+    assert len(loops) == 1
+    # In this case, this should return an outer loop
+    assert not is_outer_loop(loops[0])
+    assert loops[0].variable.name == "j"
