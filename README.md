@@ -30,7 +30,7 @@ and OpenMP directives and clauses.
 Amongst other things, PSyTran provides functionality for:
  * simplifying tree traversal in PSyclone's intermediate representation,
  * analysing the structure of loops and loop nests,
- * applying OpenACC `kernels` directives,
+ * applying OpenACC `kernels` and `loops` directives,
  * applying OpenACC/OpenMP clauses to `loop` directives,
  * querying `Node` types.
 
