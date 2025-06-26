@@ -5,7 +5,7 @@
   See LICENSE in the root of the repository for full licensing details.
 -->
 
-# PSyTran: tools for automating OpenACC GPU porting efforts using PSyclone
+# PSyTran: tools for PSyclone transformation scripting
 
 ## Introduction
 
@@ -18,19 +18,20 @@ Python), which describes modifications to be made to the source code. With these
 ingredients, PSyclone converts the source code to its internal *intermediate
 representation*, applies the transformations, and then writes out the modified code.
 
-One key example of a transformation to be applied to the input code is to insert
-[OpenACC](https://www.openacc.org) directives and clauses. Compiled under
+Two key examples of transformations to be applied to the input code are to insert
+[OpenACC](https://www.openacc.org) or [OpenMP](https://www.openmp.org/) directives and clauses. Compiled under
 [NVHPC](https://developer.nvidia.com/hpc-sdk), the OpenACC syntax tells the compiler how
-to parallelise the code on Nvidia GPUs. This is the transformation of primary interest
-as far as PSyTran goes.
+to parallelise the code on Nvidia GPUs. Whereas, OpenMP is more universal and provides
+compiler-independent instructions on how to parallelise code on CPUs.
 
 PSyTran is a Python package which provides various helper functions for PSyclone,
-particularly with regards to writing transformation scripts for OpenACC GPU porting.
+particularly with regards to writing transformation scripts for inserting OpenACC
+and OpenMP directives and clauses.
 Amongst other things, PSyTran provides functionality for:
  * simplifying tree traversal in PSyclone's intermediate representation,
  * analysing the structure of loops and loop nests,
- * applying OpenACC `kernels` and `loop` directives,
- * applying OpenACC clauses to `loop` directives,
+ * applying OpenACC `kernels` directives,
+ * applying OpenACC/OpenMP clauses to `loop` directives,
  * querying `Node` types.
 
 ## General user instructions
