@@ -19,7 +19,7 @@ made to the source code. With these two ingredients, PSyclone converts the
 source code to its internal *intermediate representation*, applies the
 transformations, and then writes out the modified code.
 
-One key examples of transformations to be applied to the input code are to
+Key examples of transformations to be applied to the input code are to
 insert  [OpenACC](https://www.openacc.org) directives and clauses. Compiled
 under [NVHPC](https://developer.nvidia.com/hpc-sdk), the OpenACC syntax tells
 the compiler how to parallelise the code on Nvidia GPUs.
