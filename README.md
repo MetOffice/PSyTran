@@ -20,9 +20,10 @@ source code to its internal *intermediate representation*, applies the
 transformations, and then writes out the modified code.
 
 Key examples of transformations to be applied to the input code are to
-insert  [OpenACC](https://www.openacc.org) directives and clauses. Compiled
-under [NVHPC](https://developer.nvidia.com/hpc-sdk), the OpenACC syntax tells
-the compiler how to parallelise the code on Nvidia GPUs.
+insert [OpenMP](https://www.openmp.org) and [OpenACC](https://www.openacc.org)
+directives and clauses, providing instructions to compilers on how to
+distribute work in parallel for CPU or GPU. PSyclone offers the ability to
+inject these compiler directives into source code as a transformation.
 
 The transformations possible with PSyclone aren't limited to inserting compiler
 directives. From chunking loops to inlining routines, PSyclone has an enormous
