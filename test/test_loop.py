@@ -20,6 +20,7 @@ from psytran.loop import (
     is_parallelisable,
     is_perfectly_nested,
     is_simple_loop,
+    get_perfectly_nested_loops,
 )
 
 perfectly_nested_loop = {
@@ -257,3 +258,51 @@ def test_is_not_independent_triple_subloop(fortran_reader):
     assert is_perfectly_nested(loops[1])
     assert not is_independent(loops[1])
     assert is_independent(loops[2])
+
+
+def test_get_perfectly_nested_sibling_loops(fortran_reader):
+    """
+    Test that :func:`get_perfectly_nested_loops` correctly identifies perfectly
+    nested looping structures even when they are siblings.
+    """
+    schedule = get_schedule(fortran_reader, cs.double_loop_with_2_loops)
+    loops = get_perfectly_nested_loops(schedule)
+    assert len(loops) == 2
+    assert loops[0].variable.name == "i"
+    assert loops[1].variable.name == "i"
+    assert loops[0] is not loops[1]
+
+
+def test_get_perfectly_nested_loop_top_level(fortran_reader):
+    """
+    Test that :func:`get_perfectly_nested_loops` correctly returns only the top
+    or outermost loop for a nest of loops where each qualifies as 'perfectly
+    nested'.
+    """
+    schedule = get_schedule(
+        fortran_reader, cs.quadruple_loop_with_1_assignment
+    )
+    loops = get_perfectly_nested_loops(schedule)
+
+    # There are four loops in the nest but we only want to return the top level
+    assert len(loops) == 1
+    # In this case, this should return an outer loop
+    assert is_outer_loop(loops[0])
+
+
+def test_get_perfectly_nested_loop_with_conditional(fortran_reader):
+    """
+    Test that :func:`get_perfectly_nested_loops` correctly returns only the top
+    or outermost loop for a nest of loops where each qualifies as 'perfectly
+    nested'.
+    """
+    schedule = get_schedule(
+        fortran_reader, cs.conditional_imperfectly_nested_triple_loop1
+    )
+    loops = get_perfectly_nested_loops(schedule)
+
+    # There are four loops in the nest but we only want to return the top level
+    assert len(loops) == 1
+    # In this case, this should return an outer loop
+    assert not is_outer_loop(loops[0])
+    assert loops[0].variable.name == "j"
