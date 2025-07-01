@@ -247,5 +247,4 @@ def get_perfectly_nested_loops(schedule):
             if bottom_loop in get_descendents(top_loop):
                 loops.remove(bottom_loop)
 
-    # return list of perfectly nested loops
     return loops
