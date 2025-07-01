@@ -10,33 +10,41 @@
 ## Introduction
 
 Before introducing PSyTran, we should introduce
-[PSyclone](https://github.com/stfc/PSyclone). PSyclone is a domain-specific compiler and
-code transformation tool for earth system codes written in Fortran. In code
-transformation mode (which is of main interest here), PSyclone can be used to read in
-Fortran source code, along with a user-defined *transformation script* (written in
-Python), which describes modifications to be made to the source code. With these two
-ingredients, PSyclone converts the source code to its internal *intermediate
-representation*, applies the transformations, and then writes out the modified code.
+[PSyclone](https://github.com/stfc/PSyclone). PSyclone is a domain-specific
+compiler and code transformation tool for earth system codes written in Fortran.
+In code transformation mode (which is of main interest here), PSyclone can be
+used to read in Fortran source code, along with a user-defined
+*transformation script* (written in Python), which describes modifications to be
+made to the source code. With these two ingredients, PSyclone converts the
+source code to its internal *intermediate representation*, applies the
+transformations, and then writes out the modified code.
 
-Two key examples of transformations to be applied to the input code are to insert
-[OpenACC](https://www.openacc.org) or [OpenMP](https://www.openmp.org/) directives and clauses. Compiled under
-[NVHPC](https://developer.nvidia.com/hpc-sdk), the OpenACC syntax tells the compiler how
-to parallelise the code on Nvidia GPUs. Whereas, OpenMP is more universal and provides
-compiler-independent instructions on how to parallelise code on CPUs.
+One key examples of transformations to be applied to the input code are to
+insert  [OpenACC](https://www.openacc.org) directives and clauses. Compiled
+under [NVHPC](https://developer.nvidia.com/hpc-sdk), the OpenACC syntax tells
+the compiler how to parallelise the code on Nvidia GPUs.
 
-PSyTran is a Python package which provides various helper functions for PSyclone,
-particularly with regards to writing transformation scripts for inserting OpenACC
-and OpenMP directives and clauses.
+The transformations possible with PSyclone aren't limited to inserting compiler
+directives. From chunking loops to inlining routines, PSyclone has an enormous
+selection of transformations, which are all
+[documented here](https://psyclone.readthedocs.io/en/stable/transformations.html).
+
+PSyTran is a Python package which provides various helper functions for using
+PSyclone, most notably for, but not limited to, writing transformation scripts
+for inserting OpenACC and OpenMP directives and clauses.
+
 Amongst other things, PSyTran provides functionality for:
  * simplifying tree traversal in PSyclone's intermediate representation,
- * analysing the structure of loops and loop nests,
+ * finding and analysing the structure of loops and loop nests,
  * applying OpenACC `kernels` and `loop` directives,
- * applying OpenACC/OpenMP clauses to `loop` directives,
+ * applying OpenACC clauses to `loop` directives,
+ * applying OpenMP directives,
  * querying `Node` types.
 
 ## General user instructions
 
-Instructions for installing PSyTran and building and viewing its documentation may be found on the [Wiki page](https://github.com/MetOffice/psytran/wiki#general-users).
+Instructions for installing PSyTran and building and viewing its documentation
+may be found on the [Wiki page](https://github.com/MetOffice/psytran/wiki#general-users).
 
 ## Developer notes
 
