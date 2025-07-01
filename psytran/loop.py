@@ -243,8 +243,8 @@ def get_perfectly_nested_loops(schedule):
     # For each loop in the list check if loops below it are a descendent and
     # remove them if they are
     for top_loop in loops[:]:
-        for bottom_loop in reversed(loops[:]):
-            if bottom_loop in get_descendents(top_loop):
+        for bottom_loop in get_descendents(top_loop):
+            if bottom_loop in loops:
                 loops.remove(bottom_loop)
 
     return loops
